@@ -14,7 +14,7 @@ function fahrenheitToCelsius(fTemp) {
 
 async function getTemperature(long, lat) {
 
-    if (cache.date == null || Date.now() - cache.date > 60 * 1000) {
+    if (cache.date == null || Date.now() - cache.date > 10 * 60 * 1000) {
         console.log('Sending darksky weather request');
         const res = await axios.get(
             `https://api.darksky.net/forecast/${DARKSKY_APIKEY}/${long},${lat}`
@@ -38,6 +38,15 @@ const notifyWeather = async socket => {
     }
 };
 
+const weatherLoopPush = (socket) => {
+    return setInterval(
+        () => {
+            notifyWeather(socket);
+        },
+        10000)
+};
+
 module.exports = {
-    notifyWeather
+    notifyWeather,
+    weatherLoopPush
 };

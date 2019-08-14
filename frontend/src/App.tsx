@@ -2,12 +2,14 @@ import React, {useState, useEffect} from 'react';
 import ScreenSaver from "./components/ScreenSaver/ScreenSaver";
 import classes from './App.module.css';
 import socketIOClient from "socket.io-client";
+import UsersOnline from "./components/UsersOnline/UsersOnline";
 
 const App: React.FC = () => {
 
     const [screenSaver, setScreenSaver] = useState(true);
     const [endpoint] = useState('http://localhost:8080/api');
     const [weatherData, setWeather] = useState('');
+    const [usersOnline, setUsersOnline] = useState(0);
 
     const [eventID, setEventID] = useState(null);
 
@@ -16,6 +18,9 @@ const App: React.FC = () => {
         const socket = socketIOClient(endpoint, {path:'/socket'});
         socket.on("weatherNotification", (data:string) => {
             setWeather(data);
+        });
+        socket.on("usersOnline", (data:number) => {
+            setUsersOnline(data);
         });
         socket.emit("hello", {map: 4, coords: '0.0'})
     }, []);
@@ -31,6 +36,7 @@ const App: React.FC = () => {
     return (
         <div className={classes.App}>
             {weatherData}
+            <UsersOnline count={usersOnline}/>
             {screenSaver ? <ScreenSaver onClick={toggleScreenSaver}/> : null}
             {!screenSaver ? <button onClick={toggleScreenSaver} className={"fa fa-pause"}/> : null}
         </div>
