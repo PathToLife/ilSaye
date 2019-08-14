@@ -1,14 +1,15 @@
 const express = require('express');
-const https = require('https');
+//const https = require('https');
 const http = require('http');
 const socketIO = require('socket.io');
 const axios = require('axios');
-
+const cors = require('cors');
 /*
  Need Swagger
  */
 
 const app = express();
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 
 const HTTP_PORT = 8080;
 // const HTTPS_PORT = null; // 443;
@@ -50,9 +51,13 @@ const getApiAndEmit = async socket => {
 };
 
 const httpServer = http.createServer(app);
-const io = socketIO(httpServer);
+const io = socketIO(httpServer, {
+    path: '/socket'
+});
+
 io.on("connection", socket => {
     console.log("New client connected");
+    getApiAndEmit(socket);
     const clientUpdater = setInterval(
         () => getApiAndEmit(socket),
         10000

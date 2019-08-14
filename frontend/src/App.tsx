@@ -6,14 +6,14 @@ import socketIOClient from "socket.io-client";
 const App: React.FC = () => {
 
     const [screenSaver, setScreenSaver] = useState(true);
-    const [weatherEndpoint] = useState('http://127.0.01:8080');
+    const [weatherEndpoint] = useState('http://localhost:8080');
     const [weatherData, setWeather] = useState('');
 
     const toggleScreenSaver = () => setScreenSaver(!screenSaver);
 
     useEffect(() => {
         console.log('run once');
-        const socket = socketIOClient(weatherEndpoint);
+        const socket = socketIOClient(weatherEndpoint, {path:'/socket'});
         socket.on("FromAPI", (data:string) => {
             setWeather(data);
         })
