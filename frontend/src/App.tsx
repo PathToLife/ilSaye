@@ -9,16 +9,24 @@ const App: React.FC = () => {
     const [endpoint] = useState('http://localhost:8080/api');
     const [weatherData, setWeather] = useState('');
 
-    const toggleScreenSaver = () => setScreenSaver(!screenSaver);
+    const [eventID, setEventID] = useState(null);
 
     useEffect(() => {
         console.log('run once');
         const socket = socketIOClient(endpoint, {path:'/socket'});
-        socket.on("FromAPI", (data:string) => {
+        socket.on("weatherNotification", (data:string) => {
             setWeather(data);
         });
         socket.emit("hello", {map: 4, coords: '0.0'})
     }, []);
+
+    const toggleScreenSaver = () => setScreenSaver(!screenSaver);
+
+    const joinEvent = (eventID: string) => {
+
+    };
+
+
 
     return (
         <div className={classes.App}>

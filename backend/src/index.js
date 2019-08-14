@@ -1,8 +1,8 @@
 const express = require('express');
 //const https = require('https');
 const http = require('http');
-const socketIO = require('socket.io');
-const axios = require('axios');
+const AttachSockets = require('./api/websocket/socket');
+
 const cors = require('cors');
 /*
  Need Swagger
@@ -37,39 +37,8 @@ app.get('/', (req, res) => {
 
 app.use('/api', api);
 
-
-// Testing Socket.io
-const getApiAndEmit = async socket => {
-    try {
-        const res = await axios.get(
-            "https://api.darksky.net/forecast/e31bf4cadf43d410d2da84139ab49ab2/-36.846773,174.763057"
-        ); // Getting the data from DarkSky
-        socket.emit("FromAPI", res.data.currently.temperature); // Emitting a new message. It will be consumed by the client
-    } catch (error) {
-        console.error(`Error: ${error.code}`);
-    }
-};
-
 const httpServer = http.createServer(app);
-const io = socketIO(httpServer, {
-    path: '/socket'
-});
-
-io.of('/api').on("connection", socket => {
-    console.log("New client connected");
-    getApiAndEmit(socket);
-    const clientUpdater = setInterval(
-        () => getApiAndEmit(socket),
-        10000
-    );
-    socket.on("disconnect", () => {
-        console.log("Client disconnected");
-        clearInterval(clientUpdater);
-    });
-    socket.on("hello", (msg) => {
-        console.log('hello got', msg);
-    });
-});
+AttachSockets(httpServer);
 
 
 httpServer.listen(HTTP_PORT, HOST, () => {

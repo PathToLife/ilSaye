@@ -1,7 +1,7 @@
 {
   "name": "ilsayebackend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.js",
   "author": "Sean Z",
   "license": "TBD",
   "private": true,
@@ -15,6 +15,6 @@
     "sqlite3": "^4.0.9"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node src/index.js"
   }
 }
