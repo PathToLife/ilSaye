@@ -55,7 +55,7 @@ const io = socketIO(httpServer, {
     path: '/socket'
 });
 
-io.on("connection", socket => {
+io.of('/api').on("connection", socket => {
     console.log("New client connected");
     getApiAndEmit(socket);
     const clientUpdater = setInterval(
@@ -66,7 +66,12 @@ io.on("connection", socket => {
         console.log("Client disconnected");
         clearInterval(clientUpdater);
     });
+    socket.on("hello", (msg) => {
+        console.log('hello got', msg);
+    });
 });
+
+
 httpServer.listen(HTTP_PORT, HOST, () => {
     console.log(`HTTP listening on ${HTTP_PORT}`)
 });
