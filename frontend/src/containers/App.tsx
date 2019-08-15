@@ -17,8 +17,6 @@ const App: React.FC = () => {
     const [endpoint] = useState('http://localhost:8080/api');
     const [usersOnline, setUsersOnline] = useState(0);
 
-    const [eventID, setEventID] = useState(null);
-
     useEffect(() => {
         console.log('run once');
 
@@ -31,20 +29,13 @@ const App: React.FC = () => {
         socket.emit("hello", {map: 4, coords: '0.0'})
 
 
-    }, []);
+    }, [endpoint]);
 
-    const joinEventHandler = (eventCODE: string) => {
-
-    };
 
     const [isAuthenticated, setAuthenticated] = useState(false);
 
     const messageHandler = (data: string) => {
     };
-
-    const checkLoggedIn = () => {
-
-    }
 
     const loginHandler = (username: string, password: string) => {
         setAuthenticated(true);
@@ -55,19 +46,6 @@ const App: React.FC = () => {
         setAuthenticated(false);
         return true;
     };
-
-    const content = (() => {
-        if (isAuthenticated) {
-            return (
-                <div>
-                    <MainNav/>
-                    <MainPanel/>
-                </div>
-            )
-        } else {
-            return
-        }
-    })();
 
     const r_ScreenSaver = () => (
         <ScreenSaver usersOnline={usersOnline}/>
@@ -84,11 +62,13 @@ const App: React.FC = () => {
             <AuthContext.Provider
                 value={{
                     authenticated: isAuthenticated,
+                    userName: "",
                     login: loginHandler,
                     logout: logoutHandler
                 }}
             >
                 <div className={classes.App}>
+                    <MainNav/>
                     <Switch>
                         <Route exact path="/" component={r_ScreenSaver}/>
                         <Route path="/dashboard" component={r_MainPanel}/>

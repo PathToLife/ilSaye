@@ -1,0 +1,11 @@
+.card {
+    background-color: transparent;
+}
+
+.fontTitle {
+    font-size: calc(40px + 2vmin);
+}
+
+.JoinEvent button {
+    width: 100%;
+}
