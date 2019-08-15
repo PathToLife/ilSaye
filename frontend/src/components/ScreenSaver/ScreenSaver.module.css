@@ -1,5 +1,4 @@
 .ScreenSaver {
-    margin-top: 30px;
     text-align: center;
     background-color: #282c34;
 
@@ -11,32 +10,47 @@
     /*justify-content: center;*/
 }
 
-.logo {
+.fontTitle {
     font-size: calc(40px + 2vmin);
-    margin-bottom: 20px;
 }
 
-.slogan {
+.fontSlogan {
     font-size: calc(10px + 2vmin);
-    margin-bottom: 30px;
 }
 
-.box {
-
+.fontDescription {
+    font-size: calc(5px + 2vmin);
 }
+
 .ScreenSaver Button {
-    animation-duration: 2s;
-    animation-iteration-count: infinite;
     background: none;
     border: none;
     color: white;
-    height: 50px;
-    display:block;
+    display: block;
     cursor: pointer;
+
+    height: 20vw;
+    min-height: 60px;
+    max-height: 20vh;
+    font-size: calc(50px + 2vw);
+
     transform-origin: bottom;
-    animation-name: bounce-5;
-    animation-timing-function: ease;
+
+    animation: bounce-5 2s ease, change-background 5s linear infinite;
 }
+
+@keyframes change-background {
+    0% {
+        color: #69b7eb;
+    }
+    50% {
+        color: white;
+    }
+    100% {
+        color: #69b7eb;
+    }
+}
+
 /*https://css-tricks.com/making-css-animations-feel-natural/*/
 @keyframes bounce-5 {
     0%   { transform: scale(1,1)    translateY(0); }

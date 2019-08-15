@@ -2,10 +2,12 @@ import React from "react";
 import {Navbar, Nav, NavDropdown} from "react-bootstrap";
 import AuthContext from "../../context/auth-context";
 import Button from "react-bootstrap/Button";
+import {Redirect} from 'react-router-dom';
 
 const MainNav: React.FC = () => {
 
     const authContext = React.useContext(AuthContext);
+    if (!authContext.authenticated) return <Redirect to='/join'/>;
 
     return (
         <div>
@@ -34,12 +36,12 @@ const MainNav: React.FC = () => {
                             <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
-                </Navbar.Collapse>
-                <Navbar.Collapse className="justify-content-end">
-                    <Navbar.Text className="pr-2">
-                        Signed in as: <a href="#login">Mark Otto</a>
-                    </Navbar.Text>
-                    <Button onClick={authContext.logout}>Logout</Button>
+                    <Nav>
+                        <Navbar.Text className="pr-2">
+                            Signed in as: <a href="#login">Mark Otto</a>
+                        </Navbar.Text>
+                        <Button onClick={authContext.logout}>Logout</Button>
+                    </Nav>
                 </Navbar.Collapse>
             </Navbar>
 

@@ -10,3 +10,8 @@ body {
 .App-link {
   color: #61dafb;
 }
+
+a:hover {
+  text-decoration: none;
+}
+

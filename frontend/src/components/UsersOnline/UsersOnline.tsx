@@ -8,7 +8,7 @@ const UsersOnline: React.FC<users> = ({count}) => {
 
     return (
         <div className={"UsersOnline"}>
-            {`${count} Sayers online`}
+            {`Sayers online: ${count} `}
         </div>
     )
 };
