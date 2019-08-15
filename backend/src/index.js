@@ -8,12 +8,16 @@ const cors = require('cors');
  Need Swagger
  */
 
-const app = express();
-app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
-
-const HTTP_PORT = 8080;
+const HTTP_PORT = process.env.PORT ? process.env.PORT : 8080;
 // const HTTPS_PORT = null; // 443;
-const HOST = '0.0.0.0';
+const HOST = process.env.HOST ? process.env.HOST : '0.0.0.0';
+
+const app = express();
+app.use(cors({
+    origin: HOST
+}));
+
+
 
 let active = false;
 
