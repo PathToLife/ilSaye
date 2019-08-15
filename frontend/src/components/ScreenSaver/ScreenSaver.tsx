@@ -1,10 +1,12 @@
 import React from "react";
 import classes from "./ScreenSaver.module.css";
+import UsersOnline from "../UsersOnline/UsersOnline";
 
 type ScreenProps = {
-    onClick: any
+    onClick: any,
+    usersOnline: number
 }
-const ScreenSaver: React.FC<ScreenProps> = ({onClick}) => {
+const ScreenSaver: React.FC<ScreenProps> = ({onClick, usersOnline}) => {
     return (
         <header className={classes.ScreenSaver}>
             <div className={classes.logo}>ilSaye</div>
@@ -14,7 +16,11 @@ const ScreenSaver: React.FC<ScreenProps> = ({onClick}) => {
                 <br/>
                 walka walk
             </div>
-            <button className={"fa fa-play"} onClick={onClick}/>
+            <UsersOnline count={usersOnline}/>
+            <button className="fas fa-play" onClick={onClick}/>
+            <div>
+                give yourself a voice within an audience of thousands
+            </div>
         </header>
     )
 };
