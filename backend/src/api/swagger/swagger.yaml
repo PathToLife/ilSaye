@@ -15,12 +15,74 @@ servers:
   - url: http://localhost:8080/api/v1
     description: Internal staging server for testing
 
+tags:
+  - name: auth
+    description: these endpoints handle authentication tokens lifecycle
+  - name: private
+    description: these endpoints require authentication, they track sessions
+  - name: public
+    description: these endpoints do not require authentication
+  - name: websocket
+    description: parts of the API are embedded in websocket RTC emissions
+
 paths:
+
   /login:
     post:
-      summary: logins a user
+      tags:
+        - auth
+      summary: standard user pass login
+  /logingoogle:
+    post:
+      tags:
+        - auth
+      summary: google oauth2
+  /loginfacebook:
+    post:
+      tags:
+        - auth
+      summary: facebook oauth
+  /logout:
+    get:
+      tags:
+        - auth
+      summary: invalidates user session
+
+  /eventjoin:
+    post:
+      tags:
+        - private
+      summary: subscribe to live event - recieve updates
+  /eventleave:
+    get:
+      tags:
+        - private
+      summary: unsubscribe to live event
+  /eventcreate:
+    get:
+      tags:
+        - private
+      summary: create live event
+
+  /socket/privateapi:
+    delete:
+      tags:
+        - websocket
+        - public
+      summary: messages command line
+  /socket/publicapi:
+    delete:
+      tags:
+        - websocket
+        - private
+      summary: users online counter
+
+
+
   /dbtest:
     get:
+      tags:
+        - public
       summary: Test a db fetch call
       description: retrieves the latest entry from the test_table
       responses:
@@ -38,25 +100,7 @@ paths:
                 type: string
                 example: server error
 
-  /persons:
-    get:
-      summary: Not implemented Gets some persons
-      description: Returns a list containing all persons.
-      responses:
-        200:
-          description: A list of Person
-          schema:
-            type: array
-            items:
-              required:
-                - username
-              properties:
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-                username:
-                  type: string
+
 
 components:
   schemas:
@@ -73,3 +117,16 @@ components:
         date:
           type: string
           description: date time
+    listPersons:
+      title: List
+      type: array
+      items:
+        required:
+          - username
+        properties:
+          firstName:
+            type: string
+          lastName:
+            type: string
+          username:
+            type: string

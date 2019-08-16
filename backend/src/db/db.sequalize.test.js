@@ -1,6 +1,10 @@
 const {describe, it} = require('mocha');
 const expect = require('expect');
 
+/**
+ * This Test Module not only tests the connection code,
+ * it also servers a dual purpose of creating / altering tables for a new db
+ */
 
 const db = require('./db.js');
 const TestText = require('./models/model_test');
