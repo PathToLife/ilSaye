@@ -1,9 +1,9 @@
 const socketIO = require('socket.io');
 const {notifyOnline} = require('./online');
-const ClientsManager = require('./clientsManager');
+const socketCounter = require('./socketCounterManager');
 const cookie = require('cookie');
 
-const publicCM = new ClientsManager();
+const publicCM = new socketCounter();
 
 const AttachSockets = (httpServer) => {
     const io = socketIO(httpServer, {

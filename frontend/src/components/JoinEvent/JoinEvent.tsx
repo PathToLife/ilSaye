@@ -6,12 +6,15 @@ import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import {Redirect} from "react-router-dom";
+import axios from "axios";
 
 import classes from "./JoinEvent.module.css";
 import AppContext from "../../context/AppContext";
 import GoogleLogin from "react-google-login";
 
-type joinEventPanelTypes = {}
+type joinEventPanelTypes = {
+
+}
 const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
     const authContext = useContext(AppContext);
 
@@ -20,7 +23,13 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
     const colConfig = {xs: 12, md: 6, lg: 3};
 
     const responseGoogleOk = (res: any) => {
-        console.log(`Ok ${res}`);
+        axios.post(`http://localhost:8080/api/v1/logingoogle?token=${res.accessToken}`)
+            .then(res => {
+                if (res.status === 200) {
+                    authContext.login(res.data.username, '');
+                }
+            })
+            .catch(e => console.log(e));
     };
 
     const responseGoogleErr = (res: any) => {
@@ -53,8 +62,7 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
 
                                 <Accordion.Collapse eventKey="0">
                                     <Card.Body>
-                                        djwiao
-
+                                        To be implemented, needs hashing
                                     </Card.Body>
                                 </Accordion.Collapse>
                             </Card>

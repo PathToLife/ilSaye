@@ -1,6 +1,6 @@
 const shortid = require('shortid');
 
-class ClientsManager {
+class SocketCounterManager {
 
     constructor() {
         this.onlineClients = new Map();
@@ -61,4 +61,4 @@ class ClientsManager {
 
 
 
-module.exports = ClientsManager;
+module.exports = SocketCounterManager;

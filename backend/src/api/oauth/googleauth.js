@@ -4,19 +4,19 @@ const axios = require('axios');
 const APP_CONTEXT = '495410337391-l6eu5s4fpk4228k7e2td9supfosnmhb0.apps.googleusercontent.com';
 
 const validateToken = (token) => {
-    return new Promise( (res, rej) => {
+    return new Promise((resolve, rej) => {
         axios.get(`https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${token}`)
             .then(res => {
                 try {
-                    if (res.statusCode === 200) {
-                        const userObj = JSON.parse(data);
-
-                        if (userObj.issued_to && userObj.issued_to === APP_CONTEXT) {
-                            return {
-                                email: userObj.email,
-                                verified_email: userObj.verified_email,
-                                expires_in: userObj.expires_in
-                            }
+                    if (res.status === 200) {
+                        const data = res.data;
+                        if (data.issued_to && data.issued_to === APP_CONTEXT) {
+                            resolve({
+                                email: data.email,
+                                verified_email: data.verified_email,
+                                expires_in: data.expires_in
+                            });
+                            return;
                         }
                     }
                     rej(res.statusCode)

@@ -1,9 +1,11 @@
 const modelUser = require('../db/models/model_user');
 
 const isUser = (username) => {
-    modelUser.find({where: username}).then(data => {
+    modelUser.findOne({
+        where: {username: username}
+    }).then(data => {
         console.log(data);
-    }).catch(e => throw(e));
+    }).catch(e => {throw Error(e)});
 };
 
 const getUser = (username) => {
@@ -17,3 +19,5 @@ const authUser = (username, password) => {
 module.exports = {
     isUser
 };
+
+isUser('hi');

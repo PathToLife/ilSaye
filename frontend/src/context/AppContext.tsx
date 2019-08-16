@@ -1,7 +1,5 @@
 import React from "react";
 
-
-
 export const defaultContext = {
     authenticated: false,
     event: {

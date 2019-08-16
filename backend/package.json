@@ -27,7 +27,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon start",
-    "test": "mocha src/**/*.test.js"
+    "test": "mocha src/**/*.test.js",
+    "dev1": "node src/client/user.js"
   },
   "devDependencies": {
     "@types/express": "^4.17.0",
