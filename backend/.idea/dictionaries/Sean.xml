@@ -7,7 +7,12 @@
       <w>azurewebsites</w>
       <w>darksky</w>
       <w>dbtest</w>
+      <w>eventcreate</w>
+      <w>eventjoin</w>
+      <w>eventleave</w>
       <w>ilsayebackend</w>
+      <w>loginfacebook</w>
+      <w>logingoogle</w>
       <w>privateapi</w>
       <w>publicapi</w>
       <w>reactnoob</w>
