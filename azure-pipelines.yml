@@ -12,9 +12,15 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
 
-- script: |
-    npm install
-    npm run build
+- task: Npm@1
+  inputs:
+    command: 'install'
+    workingDir: 'frontend/'
+
+- script: npm test
+  workingDirectory: frontend
+
+- script: npm run build
   workingDirectory: frontend
   displayName: 'npm install and build'
   env:
@@ -25,7 +31,7 @@ steps:
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: 'frontend/build'
-    includeRootFolder: true
+    includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
