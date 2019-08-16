@@ -25,7 +25,7 @@ import socketsStore from "../sockets/socketStore";
 const App: React.FC = () => {
 
     // States
-    const [endpoint] = useState('http://localhost:8080');
+    const [endpoint] = useState(process.env.BACKEND);
     const [usersOnline, setUsersOnline] = useState(0);
     const [isAuthenticated, setAuthenticated] = useState(false);
     const [userName, setUsername] = useState('');
