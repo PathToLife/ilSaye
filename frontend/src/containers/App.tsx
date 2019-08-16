@@ -35,7 +35,10 @@ const App: React.FC = () => {
     useEffect(() => {
         console.log('App Init');
         console.log(socketsStore.public);
-        socketsStore.public = socketIOClient(`${endpoint}/publicapi`, {path: '/socket'});
+        socketsStore.public = socketIOClient(`${endpoint}/publicapi`, {
+            path: '/socket',
+            transports: ['websocket']
+        });
         socketsStore.public.on("message", (data: string) => messageHandler(data));
         socketsStore.public.on("usersOnline", (data: number) => {
             setUsersOnline(data);
@@ -51,7 +54,10 @@ const App: React.FC = () => {
         setEvent({...event, name:'MSA'});
         setUsername(username);
 
-        socketsStore.private = socketIOClient(`${endpoint}/privateapi`, {path: '/socket'});
+        socketsStore.private = socketIOClient(`${endpoint}/privateapi`, {
+            path: '/socket',
+            transports: ['websocket']
+        });
         socketsStore.private.on("message", (data:string) => {
 
         });

@@ -9,7 +9,6 @@ class ClientsManager {
     }
 
     /**
-     *
      * @param socket
      * @returns {{id, socket: *, updateSubscribers: Array}}
      */

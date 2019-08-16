@@ -7,7 +7,8 @@ const publicCM = new ClientsManager();
 
 const AttachSockets = (httpServer) => {
     const io = socketIO(httpServer, {
-        path: '/socket' // internal TCP path of socket, not to be confused with http path
+        path: '/socket', // internal TCP path of socket, not to be confused with http path
+        transports: ['websocket']
     });
 
     // Event Routing
