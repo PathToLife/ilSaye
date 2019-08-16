@@ -18,14 +18,14 @@ steps:
   workingDirectory: 'frontend/'
   displayName: 'yarn test'
   env:
-    BACKEND: "ilsaye.azurewebsites.net"
+    REACT_APP_BACKEND_ENDPOINT: "ilsaye.azurewebsites.net"
     PORT: 80
 
 - script: yarn run build
   workingDirectory: 'frontend/'
   displayName: 'yarn build'
   env:
-    BACKEND: "ilsaye.azurewebsites.net"
+    REACT_APP_BACKEND_ENDPOINT: "ilsaye.azurewebsites.net"
     PORT: 80
 
 # Node.js with React
