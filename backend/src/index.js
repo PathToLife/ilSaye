@@ -1,6 +1,7 @@
 require('dotenv').config(); // Load passwords / ports from .env
 const express = require('express');
 const http = require('http');
+const AttachSwagger = require('./api/swagger/swag');
 //const https = require('https');
 
 // Cross Origin Request
@@ -12,6 +13,8 @@ const publicRoute = require('./publicRoute');
 // Socket
 const AttachSockets = require('./api/websocket/socket');
 
+const BUILD_VERSION = "0.8.1";
+
 /*
  Need Swagger
  */
@@ -21,15 +24,15 @@ const HTTP_PORT = process.env.PORT ? process.env.PORT : 8080;
 const HOST = process.env.HOST ? process.env.HOST : '0.0.0.0';
 
 const app = express();
+
 app.use(cors({
     origin: HOST
 }));
-
 app.get('/', (req, res) => {
-    res.send('ok ');
+    res.send(`API Server ${BUILD_VERSION} <br/> ${(new Date()).toString()}`);
 });
-
-app.use('/api', publicRoute);
+app.use('/api/v1', publicRoute);
+AttachSwagger(app);
 
 const httpServer = http.createServer(app);
 AttachSockets(httpServer);

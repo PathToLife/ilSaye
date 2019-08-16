@@ -1,4 +1,4 @@
-const {Connection, Request} = require('tedious');
+const {Connection} = require('tedious');
 
 const LOAD_RESULT_MEMORY = true;
 
@@ -6,13 +6,13 @@ const config = {
     server: process.env.DB_HOST, // update me
     authentication: {
         options: {
-            userName: process.env.DB_USER, // update me
-            password: process.env.DB_PASS // update me
+            userName: process.env.DB_USER,
+            password: process.env.DB_PASS
         },
         type: 'default'
     },
     options: {
-        database: 'ilsayedb', //update me
+        database: 'ilsayedb',
         encrypt: true,
         rowCollectionOnRequestCompletion: LOAD_RESULT_MEMORY,
         trustServerCertificate: true

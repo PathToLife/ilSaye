@@ -19,6 +19,7 @@
     "shortid": "^2.2.14",
     "socket.io": "^2.2.0",
     "sqlite3": "^4.0.9",
+    "swagger-ui-express": "^4.0.7",
     "tedious": "^6.3.0"
   },
   "scripts": {

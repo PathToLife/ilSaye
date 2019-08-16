@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const expect = require('expect');
 const {Request, TYPES} = require('tedious');
+const {describe, it} = require('mocha');
 
 describe("DB", () => {
 
