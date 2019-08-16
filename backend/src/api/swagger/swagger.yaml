@@ -3,7 +3,7 @@ openapi: 3.0.0
 info:
   version: 0.8.2
   title: ilSaye Backend API
-  description: A event communication backend for large audiences
+  description: An event communication backend for large audiences
 
 schemes:
   - https
@@ -29,7 +29,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Message'
+                $ref: '#/components/schemas/testtextModel'
         503:
           decription: Server Error
           content:
@@ -60,8 +60,8 @@ paths:
 
 components:
   schemas:
-    Message:
-      title: Test text object
+    testtextModel:
+      title: Testtext db model
       type: object
       properties:
         pk:
