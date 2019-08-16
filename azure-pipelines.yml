@@ -1,0 +1,39 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
+
+- script: yarn install
+  workingDirectory: 'backend/'
+  displayName: 'yarn install'
+
+- script: yarn test
+  workingDirectory: 'backend/'
+  displayName: 'yarn test'
+  env:
+    PORT: 80
+
+# Node.js with React
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: 'backend/build'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+# Build a Node.js project that uses React.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
