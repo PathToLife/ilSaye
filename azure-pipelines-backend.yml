@@ -20,14 +20,14 @@ steps:
   workingDirectory: 'backend/'
   displayName: 'yarn install'
 
-- script: yarn test
-  workingDirectory: 'backend/'
-  displayName: 'yarn test'
-  env:
-    DB_HOST: ${DB_HOST}
-    DB_USER: ${DB_USER}
-    DB_PASS: ${DB_PASS}
-    PORT: 80
+# - script: yarn test
+#   workingDirectory: 'backend/'
+#   displayName: 'yarn test'
+#   env:
+#     DB_HOST: ${DB_HOST}
+#     DB_USER: ${DB_USER}
+#     DB_PASS: ${DB_PASS}
+#     PORT: 80
 
 # Node.js with React
 - task: ArchiveFiles@2
