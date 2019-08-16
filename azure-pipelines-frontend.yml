@@ -1,6 +1,9 @@
 trigger:
 - master
 
+variables:
+  REACT_APP_BACKEND_ENDPOINT: "ilsaye.azurewebsites.net"
+
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -18,14 +21,14 @@ steps:
   workingDirectory: 'frontend/'
   displayName: 'yarn test'
   env:
-    REACT_APP_BACKEND_ENDPOINT: "ilsaye.azurewebsites.net"
+    REACT_APP_BACKEND_ENDPOINT: ${REACT_APP_BACKEND_ENDPOINT}
     PORT: 80
 
 - script: yarn run build
   workingDirectory: 'frontend/'
   displayName: 'yarn build'
   env:
-    REACT_APP_BACKEND_ENDPOINT: "ilsaye.azurewebsites.net"
+    REACT_APP_BACKEND_ENDPOINT: ${REACT_APP_BACKEND_ENDPOINT}
     PORT: 80
 
 # Node.js with React
