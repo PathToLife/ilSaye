@@ -5,19 +5,32 @@ const {Request, TYPES} = require('tedious');
 
 describe("DB", () => {
 
+    it('should be defined DB_HOST', (done) => {
+        const val = process.env.DB_HOST;
+        console.log(val);
+        expect(val).toBeDefined();
+        done();
+    });
+
+    it('should be defined DB_USER', (done) => {
+        const val = process.env.DB_USER;
+        console.log(val);
+        expect(val).toBeDefined();
+        done();
+    });
+
+    it('should be defined DB_PASS', (done) => {
+        const val = process.env.DB_PASS;
+        expect(val).toBeDefined();
+        done();
+    });
+
     let conn = null;
     it('should connect without errors', (done) => {
         conn = require('./conn');
         conn.on('connect', (err) => {
             done(err);
         });
-
-    });
-
-    it('should be defined DB_HOST', (done) => {
-        const host = process.env.DB_HOST;
-        expect(host).toBeDefined();
-        done();
     });
 
     it('should write to test_table', (done) => {
