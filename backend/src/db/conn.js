@@ -41,4 +41,4 @@ connection.on('connect', function (err) {
     executeStatement();
 });
 
-export default connection;
+module.exports = connection;
