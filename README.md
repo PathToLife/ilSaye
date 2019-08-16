@@ -1,6 +1,8 @@
 # ilSaye
 Live crowd interactions for events
 
+License Status: TBD, released for MSA only
+
 ## Demo:
 Live till 31/08/2019:
 - Frontend: https://ilsaye.azurewebsites.net/
