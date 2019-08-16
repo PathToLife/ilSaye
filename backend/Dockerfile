@@ -17,6 +17,6 @@ RUN npm install
 COPY . .
 
 # Webserver port
-EXPOSE 8080
+EXPOSE 8080, 80, 443
 
 CMD [ "npm", "start" ]

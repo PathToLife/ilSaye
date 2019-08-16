@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "1.0.0",
+    "version": "0.8.1",
     "title": "ilSaye Backend API",
     "description": "A event communication app for large audiences"
   },

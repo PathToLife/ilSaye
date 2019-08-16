@@ -1,7 +1,10 @@
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
 const {Router} = require('express');
+const YAML = require('yamljs');
+const path = require('path');
 
+const swaggerDocument = YAML.load(path.join(__dirname,'swagger.yaml'));
+const version = swaggerDocument.info.version;
 const router = Router();
 router.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -12,4 +15,4 @@ const AttachSwagger = (app) => {
     app.use('/api-doc', router);
 };
 
-module.exports = AttachSwagger;
+module.exports = {AttachSwagger, version};

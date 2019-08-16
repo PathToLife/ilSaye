@@ -1,19 +1,19 @@
 require('dotenv').config(); // Load passwords / ports from .env
 const express = require('express');
 const http = require('http');
-const AttachSwagger = require('./api/swagger/swag');
+const {AttachSwagger, version}= require('./api/swagger/swag');
 //const https = require('https');
 
 // Cross Origin Request
 const cors = require('cors');
 
 // Routers
-const publicRoute = require('./publicRoute');
+const publicRoute = require('./api/routes/publicRoute');
 
 // Socket
 const AttachSockets = require('./api/websocket/socket');
 
-const BUILD_VERSION = "0.8.1";
+const BUILD_VERSION = version;
 
 /*
  Need Swagger
@@ -26,7 +26,7 @@ const HOST = process.env.HOST ? process.env.HOST : '0.0.0.0';
 const app = express();
 
 app.use(cors({
-    origin: HOST
+    origin: [/\.eozmon\.com$/, /\.azurewebsites\.net$/, /localhost:[0-9]+$/, HOST]
 }));
 app.get('/', (req, res) => {
     res.send(`API Server ${BUILD_VERSION} <br/> ${(new Date()).toString()}`);

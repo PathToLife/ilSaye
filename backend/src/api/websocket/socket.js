@@ -35,6 +35,7 @@ const AttachSockets = (httpServer) => {
         socket.on("disconnect", () => {
             console.log(`Client disconnected ${client.id}`);
             publicCM.removeClient(client);
+            publicCM.updateClients();
         });
     });
 
