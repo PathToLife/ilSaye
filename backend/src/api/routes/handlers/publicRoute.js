@@ -2,8 +2,8 @@ const express = require('express');
 
 const router = express.Router();
 
-const model_test = require('../../db/models/model_test');
-const db = require('../../db/db');
+const model_test = require('../../../db/models/model_test');
+const db = require('../../../db/db');
 
 router.get('/', (req, res) => {
     let authed = false;

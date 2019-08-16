@@ -1,19 +1,25 @@
 const express = require('express');
-const {notImplemented} = require('./handlers/error');
+const {sendNotImplemented} = require('../builders/error');
 
 const router = express.Router();
 
 router.get('/logout', (req, res) => {
-    notImplemented()
+    sendNotImplemented(res);
 });
 router.post('/login', (req, res) => {
-    notImplemented()
+    sendNotImplemented(res);
+    try {
+
+    } catch (e) {
+
+    }
+    req.body
 });
 router.post('/logingoogle', (req, res) => {
-    notImplemented()
+    sendNotImplemented(res);
 });
 router.post('/loginfacebook', (req, res) => {
-    notImplemented()
+    sendNotImplemented(res);
 });
 
 module.exports = router;

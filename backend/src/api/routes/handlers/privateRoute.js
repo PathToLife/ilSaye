@@ -1,16 +1,16 @@
 const express = require('express');
-const {notImplemented} = require('./handlers/error');
+const {sendNotImplemented} = require('../builders/error');
 
 const router = express.Router();
 
 router.post('/eventjoin', (req, res) => {
-    notImplemented()
+    sendNotImplemented(res);
 });
 router.get('/eventleave', (req, res) => {
-    notImplemented()
+    sendNotImplemented(res);
 });
 router.get('/eventcreate', (req, res) => {
-    notImplemented()
+    sendNotImplemented(res);
 });
 
 module.exports = router;
