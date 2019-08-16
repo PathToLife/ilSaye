@@ -1,6 +1,9 @@
 const socketIO = require('socket.io');
 const {notifyOnline} = require('./online');
 const ClientsManager = require('./clientsManager');
+const cookie = require('cookie');
+
+const publicCM = new ClientsManager();
 
 const AttachSockets = (httpServer) => {
     const io = socketIO(httpServer, {
@@ -16,8 +19,6 @@ const AttachSockets = (httpServer) => {
     // Subscribe to event role call
     // Subscribe to event questions
     // Subscribe to event votes
-
-    const publicCM = new ClientsManager();
 
     publicCM.addUpdateSubscriber((socket) => notifyOnline(socket, publicCM.getNumberOnline()));
 
@@ -38,8 +39,8 @@ const AttachSockets = (httpServer) => {
     });
 
     io.of('/privateapi').on("connection", socket => {
-        console.log(`Private Client Joined`);
-
+        const cookies = cookie.parse(socket.handshake.headers.cookie);
+        console.log(`Private Client Joined ${socket.handshake.address} ${JSON.stringify(cookies, null, 2)}`);
         socket.on("disconnect", () => {
             console.log(`Private Client disconnected`);
         });
