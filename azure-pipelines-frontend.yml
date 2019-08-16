@@ -10,17 +10,20 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
 
-- task: Npm@1
-  inputs:
-    command: 'install'
-    workingDir: 'frontend/'
+- script: npm install
+  workingDirectory: 'frontend/'
+  displayName: 'npm install'
 
 - script: npm test
   workingDirectory: 'frontend/'
+  displayName: 'npm test'
+  env:
+    BACKEND: "ilsaye.azurewebsites.net"
+    PORT: 80
 
 - script: npm run build
   workingDirectory: 'frontend/'
-  displayName: 'npm install and build'
+  displayName: 'npm build'
   env:
     BACKEND: "ilsaye.azurewebsites.net"
     PORT: 80
