@@ -34,13 +34,13 @@ const App: React.FC = () => {
     // ComponentOnMount
     useEffect(() => {
         console.log('App Init');
-        console.log(socketsStore.main);
-        socketsStore.main = socketIOClient(`${endpoint}/publicapi`, {path: '/socket'});
-        socketsStore.main.on("message", (data: string) => messageHandler(data));
-        socketsStore.main.on("usersOnline", (data: number) => {
+        console.log(socketsStore.public);
+        socketsStore.public = socketIOClient(`${endpoint}/publicapi`, {path: '/socket'});
+        socketsStore.public.on("message", (data: string) => messageHandler(data));
+        socketsStore.public.on("usersOnline", (data: number) => {
             setUsersOnline(data);
         });
-        socketsStore.main.emit("hello", {map: 4, coords: '0.0'});
+        socketsStore.public.emit("hello", {map: 4, coords: '0.0'});
     }, [endpoint]);
 
     const messageHandler = (data: string) => {
