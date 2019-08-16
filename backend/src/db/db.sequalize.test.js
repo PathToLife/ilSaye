@@ -17,7 +17,7 @@ describe('Sequelize Connection Test', () => {
                 done()
             })
             .catch(err => done(err))
-    });
+    }).timeout(15000);
 
     it('should find test_table', function (done) {
         need_auth(this);
