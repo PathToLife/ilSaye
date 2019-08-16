@@ -110,7 +110,7 @@ components:
       properties:
         pk:
           type: number
-          decription: sql table primary key
+          description: sql table primary key
         text:
           type: string
           description: Message text
