@@ -1,7 +1,7 @@
 openapi: 3.0.0
 
 info:
-  version: 0.8.2
+  version: 0.8.3
   title: ilSaye Backend API
   description: An event communication backend for large audiences
 
@@ -10,7 +10,7 @@ schemes:
   - http
 
 servers:
-  - url: http://ilsayebackend.azurewebsites.net/api/v1
+  - url: https://ilsayebackend.azurewebsites.net/api/v1
     description: Main (production) server
   - url: http://localhost:8080/api/v1
     description: Internal staging server for testing
