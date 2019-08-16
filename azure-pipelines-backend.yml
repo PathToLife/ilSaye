@@ -1,5 +1,11 @@
 trigger:
-- master
+  branches:
+    include:
+    - master
+    - releases/*
+  paths:
+    exclude:
+    - README.md
 
 pool:
   vmImage: 'ubuntu-latest'
