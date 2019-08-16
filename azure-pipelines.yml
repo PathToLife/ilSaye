@@ -18,10 +18,10 @@ steps:
     workingDir: 'frontend/'
 
 - script: npm test
-  workingDirectory: frontend
+  workingDirectory: 'frontend/'
 
 - script: npm run build
-  workingDirectory: frontend
+  workingDirectory: 'frontend/'
   displayName: 'npm install and build'
   env:
     BACKEND: "ilsaye.azurewebsites.net"
