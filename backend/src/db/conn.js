@@ -12,9 +12,10 @@ const config = {
         type: 'default'
     },
     options: {
-        database: 'ilSayeDB', //update me
+        database: 'ilsayedb', //update me
         encrypt: true,
-        rowCollectionOnRequestCompletion: LOAD_RESULT_MEMORY
+        rowCollectionOnRequestCompletion: LOAD_RESULT_MEMORY,
+        trustServerCertificate: true
     }
 };
 
