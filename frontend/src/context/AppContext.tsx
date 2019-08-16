@@ -8,7 +8,8 @@ export const defaultContext = {
     },
     userName: '',
     login: (userName:string, password:string) => {},
-    logout: () => {}
+    logout: () => {},
+    endpoint: ''
 };
 
 const AppContext = React.createContext(defaultContext);

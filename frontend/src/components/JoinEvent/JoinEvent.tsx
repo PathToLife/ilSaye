@@ -23,7 +23,7 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
     const colConfig = {xs: 12, md: 6, lg: 3};
 
     const responseGoogleOk = (res: any) => {
-        axios.post(`http://localhost:8080/api/v1/logingoogle?token=${res.accessToken}`)
+        axios.post(`${authContext.endpoint}/api/v1/logingoogle?token=${res.accessToken}`)
             .then(res => {
                 if (res.status === 200) {
                     authContext.login(res.data.username, '');

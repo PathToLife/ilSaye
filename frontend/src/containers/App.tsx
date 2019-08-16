@@ -25,7 +25,7 @@ import socketsStore from "../sockets/socketStore";
 const App: React.FC = () => {
 
     // States
-    const [endpoint] = useState(process.env.REACT_APP_BACKEND_ENDPOINT);
+    const [endpoint] = useState(process.env.REACT_APP_BACKEND_ENDPOINT ? process.env.REACT_APP_BACKEND_ENDPOINT : 'https://ilsayebackend.azurewebsites.net');
     const [usersOnline, setUsersOnline] = useState(0);
     const [isAuthenticated, setAuthenticated] = useState(false);
     const [userName, setUsername] = useState('');
@@ -81,7 +81,8 @@ const App: React.FC = () => {
                     authenticated: isAuthenticated,
                     userName: userName,
                     login: loginHandler,
-                    logout: logoutHandler
+                    logout: logoutHandler,
+                    endpoint: endpoint
                 }}
             >
                 <div className={classes.App}>
