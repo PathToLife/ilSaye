@@ -11,7 +11,7 @@ const config = {
     },
     options:
         {
-            database: 'your_database', //update me
+            database: 'ilSayeDB', //update me
             encrypt: true
         }
 };
