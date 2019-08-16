@@ -8,14 +8,14 @@ describe("DB", () => {
 
     it('should be defined DB_HOST', (done) => {
         const val = process.env.DB_HOST;
-        console.log(val);
+        // console.log(val);
         expect(val).toBeDefined();
         done();
     });
 
     it('should be defined DB_USER', (done) => {
         const val = process.env.DB_USER;
-        console.log(val);
+        // console.log(val);
         expect(val).toBeDefined();
         done();
     });
@@ -41,7 +41,7 @@ describe("DB", () => {
         const request = new Request(stmt
             , function (err, rowCount) {
                 if (err) {
-                    console.log(err);
+                    // console.log(err);
                     done(err);
                 } else {
                     // console.log(`Inserted ${rowCount} Rows`);
@@ -58,10 +58,10 @@ describe("DB", () => {
         const stmt = `SELECT * FROM dbo.test_table`;
         const req = new Request(stmt, (err, rowCount, rows) => {
             if (!err) {
-                console.log(`Got ${rowCount} rows`);
+                // console.log(`Got ${rowCount} rows`);
                 rows.forEach(row => {
                     const data = row.map(col => col.value);
-                    console.log(data);
+                    // console.log(data);
                 });
                 done();
             } else {

@@ -2,14 +2,17 @@
   <dictionary name="Sean">
     <words>
       <w>apikey</w>
+      <w>authed</w>
       <w>axios</w>
       <w>azurewebsites</w>
       <w>darksky</w>
+      <w>dbtest</w>
       <w>ilsayebackend</w>
       <w>privateapi</w>
       <w>publicapi</w>
       <w>reactnoob</w>
       <w>saye</w>
+      <w>sequelize</w>
       <w>shortid</w>
       <w>tsql</w>
     </words>

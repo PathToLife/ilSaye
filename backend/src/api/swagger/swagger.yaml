@@ -1,7 +1,7 @@
 openapi: 3.0.0
 
 info:
-  version: 0.8.1
+  version: 0.8.2
   title: ilSaye Backend API
   description: A event communication backend for large audiences
 
@@ -19,7 +19,7 @@ paths:
   /login:
     post:
       summary: logins a user
-  /test:
+  /dbtest:
     get:
       summary: Test a db fetch call
       description: retrieves the latest entry from the test_table
@@ -33,14 +33,10 @@ paths:
         503:
           decription: Server Error
           content:
-            application/json:
+            text/plain:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: boolean
-                  message:
-                    type: string
+                type: string
+                example: server error
 
   /persons:
     get:

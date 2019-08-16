@@ -24,7 +24,7 @@ const connection = new Connection(config);
 connection.on('connect', function (err) {
     // If no error, then good to go...
     if (err) console.log(err);
-    console.log(`DB Connected ${config.server}`)
+    // console.log(`DB Connected ${config.server}`)
 });
 
 module.exports = connection;
