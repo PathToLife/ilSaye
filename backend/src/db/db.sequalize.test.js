@@ -7,8 +7,10 @@ const expect = require('expect');
  */
 
 const db = require('./db.js');
-const TestText = require('./models/model_test');
+const modelTest = require('./models/model_test');
 const modelUser = require('./models/model_user');
+const modelEvent = require('./models/model_event');
+const modelMessage = require('./models/model_message');
 
 describe('Sequelize Connection Test', () => {
     let authed = false;
@@ -27,21 +29,31 @@ describe('Sequelize Connection Test', () => {
 
     it('should find test_table', function (done) {
         need_auth(this);
-        TestText.findOne().then(data => {
+        modelTest.findOne().then(data => {
             done()
         }).catch(err => done(err));
     });
 
-    it('should write to test_table', function (done) {
+    it('should alter test_table', function (done) {
         need_auth(this);
-        TestText.create({text: "Sequelize"}).then(() => {
+        modelTest.create({text: "Sequelize"}).then(() => {
             done()
         }).catch(err => done(err));
-    });
+    }).timeout(15000);
 
-    it('should create table for model', function (done) {
+    it('should alter table for user', function (done) {
         modelUser.sync({alter: true}).then(() => done())
             .catch(err => done(err));
-    }).timeout(15000)
+    }).timeout(15000);
+
+    it('should alter table for event', function (done) {
+        modelEvent.sync({alter: true}).then(() => done())
+            .catch(err => done(err));
+    }).timeout(15000);
+
+    it('should alter table for messages', function (done) {
+        modelMessage.sync({alter: true}).then(() => done())
+            .catch(err => done(err));
+    }).timeout(15000);
 
 });
