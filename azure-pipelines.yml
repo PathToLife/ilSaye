@@ -21,4 +21,5 @@ steps:
   workingDirectory: frontend
   displayName: 'npm install and build'
   env:
+    BACKEND: "ilsaye.azurewebsites.net"
     PORT: 80
