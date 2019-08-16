@@ -32,7 +32,7 @@ steps:
 # Node.js with React
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: 'backend/build'
+    rootFolderOrFile: 'backend/'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
