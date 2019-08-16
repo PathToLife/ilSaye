@@ -25,7 +25,7 @@ import socketsStore from "../sockets/socketStore";
 const App: React.FC = () => {
 
     // States
-    const [endpoint] = useState(process.env.BACKEND);
+    const [endpoint] = useState(process.env.REACT_APP_BACKEND_ENDPOINT);
     const [usersOnline, setUsersOnline] = useState(0);
     const [isAuthenticated, setAuthenticated] = useState(false);
     const [userName, setUsername] = useState('');
