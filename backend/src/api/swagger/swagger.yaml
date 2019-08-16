@@ -1,0 +1,79 @@
+openapi: 3.0.0
+
+info:
+  version: 0.8.1
+  title: ilSaye Backend API
+  description: A event communication backend for large audiences
+
+schemes:
+  - https
+  - http
+
+servers:
+  - url: http://ilsayebackend.azurewebsites.net/api/v1
+    description: Main (production) server
+  - url: http://localhost:8080/api/v1
+    description: Internal staging server for testing
+
+paths:
+  /login:
+    post:
+      summary: logins a user
+  /test:
+    get:
+      summary: Test a db fetch call
+      description: retrieves the latest entry from the test_table
+      responses:
+        200:
+          description: A row object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        503:
+          decription: Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                  message:
+                    type: string
+
+  /persons:
+    get:
+      summary: Not implemented Gets some persons
+      description: Returns a list containing all persons.
+      responses:
+        200:
+          description: A list of Person
+          schema:
+            type: array
+            items:
+              required:
+                - username
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                username:
+                  type: string
+
+components:
+  schemas:
+    Message:
+      title: Test text object
+      type: object
+      properties:
+        pk:
+          type: number
+          decription: sql table primary key
+        text:
+          type: string
+          description: Message text
+        date:
+          type: string
+          description: date time
