@@ -17,8 +17,6 @@ app.use(cors({
     origin: HOST
 }));
 
-
-
 let active = false;
 
 const api = express.Router();

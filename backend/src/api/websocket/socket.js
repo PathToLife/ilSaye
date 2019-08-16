@@ -1,32 +1,44 @@
 const socketIO = require('socket.io');
-const {notifyWeather, weatherLoopPush} = require('./weather');
 const {notifyOnline} = require('./online');
-const manager = require('./clientsManager');
+const ClientsManager = require('./clientsManager');
 
 const AttachSockets = (httpServer) => {
     const io = socketIO(httpServer, {
         path: '/socket' // internal TCP path of socket, not to be confused with http path
     });
 
-    manager.addUpdateSubscriber((socket) => notifyOnline(socket, manager.getNumberOnline()));
+    // Event Routing
+    // User Routing
+    // Send to admin user
+    // Send to user
 
-    // http://base.com/api -> TCP /socket route
-    io.of('/api').on("connection", socket => {
+    // Subscribe to event message board
+    // Subscribe to event role call
+    // Subscribe to event questions
+    // Subscribe to event votes
 
-        const client = manager.clientConnected(socket);
-        console.log(`New client ${client.id} connected. ${manager.getNumberOnline()} online`);
-        manager.updateClients();
+    const publicCM = new ClientsManager();
 
-        notifyWeather(socket);
+    publicCM.addUpdateSubscriber((socket) => notifyOnline(socket, publicCM.getNumberOnline()));
 
-        client.updateSubscribers.push(weatherLoopPush(socket));
+    // http://base.com/public/api -> TCP /socket route
+    io.of('/publicapi').on("connection", socket => {
+        const client = publicCM.addClient(socket);
+        console.log(`New client ${client.id} connected. ${publicCM.getNumberOnline()} online`);
+        publicCM.updateClients();
+
+        socket
+            .use((socket, next) => {
+                console.log(socket.request.headers.cookie);
+                return next();
+            })
+            .on("joinEvent", (data) => {
+                console.log(data.code);
+            });
 
         socket.on("disconnect", () => {
             console.log(`Client disconnected ${client.id}`);
-            manager.clientDisconnected(client);
-        });
-        socket.on("hello", (msg) => {
-            console.log('hello got', msg);
+            publicCM.removeClient(client);
         });
     });
 };

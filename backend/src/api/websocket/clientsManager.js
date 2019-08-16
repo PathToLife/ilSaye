@@ -1,45 +1,65 @@
 const shortid = require('shortid');
 
-const onlineClients = new Map();
+class ClientsManager {
 
-const updateSubscribers = [];
+    constructor() {
+        this.onlineClients = new Map();
+        // Array of socket emit functions
+        this.updateSubscribers = [];
+    }
 
-function clientConnected(socket) {
-    const id = shortid.generate();
+    /**
+     *
+     * @param socket
+     * @returns {{id, socket: *, updateSubscribers: Array}}
+     */
+    addClient(socket) {
+        const id = shortid.generate();
 
-    const client = {
-        id: id,
-        socket: socket,
-        updateSubscribers: []
-    };
-    onlineClients.set(id, client);
+        const client = {
+            id: id,
+            socket: socket,
+            updateSubscribers: []
+        };
+        this.onlineClients.set(id, client);
 
-    return client
+        return client
+    }
+
+    /**
+     * Remove client to stop tracking and updates on that socket
+     * @param client:string
+     */
+    removeClient(client) {
+        client.updateSubscribers.forEach(subscriber => clearInterval(subscriber));
+        this.onlineClients.delete(client.id);
+    }
+
+    /**
+     * Calls each updateSubscribers socket emit() on every client
+     */
+    updateClients() {
+        this.onlineClients.forEach((client) => {
+            this.updateSubscribers.forEach(subscriber => subscriber(client.socket));
+        })
+    }
+
+    /**
+     * Adds a socket emit() function that should be run on every client
+     */
+    addUpdateSubscriber(m_function) {
+        this.updateSubscribers.push(m_function)
+    }
+
+    /**
+     * Get Number of connected clients
+     * @returns {number}
+     */
+    getNumberOnline() {
+        return this.onlineClients.size;
+    }
 }
 
-function updateClients() {
-    onlineClients.forEach((client) => {
-        updateSubscribers.forEach(subscriber => subscriber(client.socket));
-    })
-}
 
-function addUpdateSubscriber(m_function) {
-    updateSubscribers.push(m_function)
-}
 
-function getNumberOnline() {
-    return onlineClients.size;
-}
-
-function clientDisconnected(client) {
-    client.updateSubscribers.forEach(subscriber => clearInterval(subscriber));
-    onlineClients.delete(client.id);
-}
-
-module.exports = {
-    clientConnected,
-    clientDisconnected,
-    updateClients,
-    addUpdateSubscriber,
-    getNumberOnline
-};
+module.exports = ClientsManager;

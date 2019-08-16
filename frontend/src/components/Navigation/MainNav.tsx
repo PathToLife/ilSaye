@@ -1,16 +1,15 @@
 import React from "react";
 import {Navbar, Nav, NavDropdown} from "react-bootstrap";
-import AuthContext from "../../context/auth-context";
-import Button from "react-bootstrap/Button";
+import AppContext from "../../context/AppContext";
 import {NavLink, Link} from 'react-router-dom';
 
 const MainNav: React.FC = () => {
-    const authContext = React.useContext(AuthContext);
+    const appContext = React.useContext(AppContext);
 
     let r_nav = null;
-    if (authContext.authenticated) {
+    if (appContext.authenticated) {
         r_nav = [
-            <Nav className="mr-auto">
+            <Nav key="1" className="mr-auto">
                 <Nav.Link href="#home">Announcements</Nav.Link>
                 <Nav.Link href="#link">Help Desk</Nav.Link>
                 <Nav.Link href="#interact">Interact</Nav.Link>
@@ -22,17 +21,17 @@ const MainNav: React.FC = () => {
                     <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
                 </NavDropdown>
             </Nav>,
-            <Nav>
+            <Nav key="2">
                 <Navbar.Text className="pr-2">
-                    Signed in as: {authContext.userName}
+                    Signed in as: {appContext.userName}
                 </Navbar.Text>
-                <Button onClick={authContext.logout}>Logout</Button>
+                <Nav.Link onClick={appContext.logout}>Logout</Nav.Link>
             </Nav>
         ];
     } else {
         r_nav = [
-            <Nav className="mr-auto"/>,
-            <Nav>
+            <Nav key="1" className="mr-auto"/>,
+            <Nav key="2">
                 <Link to="/join" className="nav-link">
                     Login
                 </Link>
@@ -51,7 +50,7 @@ const MainNav: React.FC = () => {
                         height="30"
                         className="d-inline-block align-top pr-1"
                     />
-                    {'ilSaye'}
+                    {appContext.event.name ? appContext.event.name : 'ilSaye'}
                 </Navbar.Brand>
             </NavLink>
             {r_nav !== null ? <Navbar.Toggle aria-controls="basic-navbar-nav"/> : null}

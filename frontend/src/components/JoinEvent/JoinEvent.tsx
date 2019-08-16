@@ -8,15 +8,25 @@ import Button from "react-bootstrap/Button";
 import {Redirect} from "react-router-dom";
 
 import classes from "./JoinEvent.module.css";
-import AuthContext from "../../context/auth-context";
+import AppContext from "../../context/AppContext";
+import GoogleLogin from "react-google-login";
 
 type joinEventPanelTypes = {}
 const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
-    const authContext = useContext(AuthContext);
+    const authContext = useContext(AppContext);
 
     if (authContext.authenticated) return <Redirect to="dashboard"/>;
 
     const colConfig = {xs: 12, md: 6, lg: 3};
+
+    const responseGoogleOk = (res: any) => {
+        console.log(`Ok ${res}`);
+    };
+
+    const responseGoogleErr = (res: any) => {
+        console.log(`Error ${res}`);
+    };
+
 
     return (
         <div className={classes.JoinEvent}>
@@ -24,6 +34,11 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
                 <Row>
                     <Col>
                         <div className={classes.fontTitle}>JoinEvent</div>
+                    </Col>
+                </Row>
+                <Row className="mt-3 justify-content-md-center">
+                    <Col {...colConfig}>
+
                     </Col>
                 </Row>
                 <Row className="mt-3 mt-lg-5 justify-content-md-center">
@@ -48,12 +63,18 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
                 </Row>
                 <Row className="mt-3 justify-content-md-center">
                     <Col {...colConfig}>
-                        <Button variant="primary" className="w-100">Google</Button>
+                        <GoogleLogin
+                            clientId="495410337391-l6eu5s4fpk4228k7e2td9supfosnmhb0.apps.googleusercontent.com"
+                            buttonText="Login"
+                            onSuccess={responseGoogleOk}
+                            onFailure={responseGoogleErr}
+                            cookiePolicy={'single_host_origin'}
+                        />
                     </Col>
                 </Row>
                 <Row className="mt-3 justify-content-md-center">
                     <Col {...colConfig}>
-                        <Button variant="primary" className="w-100" onClick={() => authContext.login('', '')}>
+                        <Button variant="primary" className="w-100" onClick={() => authContext.login('dwada', 'dd')}>
                             !Dev skip login!
                         </Button>
                     </Col>

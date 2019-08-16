@@ -2,11 +2,11 @@ import React from "react";
 import {Container, Row, Col} from 'react-bootstrap';
 import ChatPanel from "../Chat/ChatPanel";
 import {Redirect} from "react-router";
-import AuthContext from "../../context/auth-context";
+import AppContext from "../../context/AppContext";
 
 const MainPanel: React.FC = () => {
 
-    const authContext = React.useContext(AuthContext);
+    const authContext = React.useContext(AppContext);
     if (!authContext.authenticated) return <Redirect to='/join'/>;
 
     return (

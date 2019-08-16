@@ -9,18 +9,17 @@ import MainPanel from "../components/MainPanel/MainPanel";
 import MainNav from "../components/Navigation/MainNav";
 import JoinEventPanel from "../components/JoinEvent/JoinEvent";
 
-import AuthContext from '../context/auth-context';
+import AppContext, {defaultContext} from '../context/AppContext';
 
 
 const App: React.FC = () => {
 
-    const [endpoint] = useState('http://localhost:8080/api');
+    const [endpoint] = useState('http://localhost:8080/publicapi');
     const [usersOnline, setUsersOnline] = useState(0);
+    const [event, setEvent] = useState(defaultContext.event);
 
     useEffect(() => {
         console.log('run once');
-
-
         const socket = socketIOClient(endpoint, {path: '/socket'});
         socket.on("message", (data: string) => messageHandler(data));
         socket.on("usersOnline", (data: number) => {
@@ -39,11 +38,13 @@ const App: React.FC = () => {
 
     const loginHandler = (username: string, password: string) => {
         setAuthenticated(true);
+        setEvent({...event, name:'MSA'});
         return true
     };
 
     const logoutHandler = () => {
         setAuthenticated(false);
+        setEvent(defaultContext.event);
         return true;
     };
 
@@ -59,10 +60,11 @@ const App: React.FC = () => {
 
     return (
         <BrowserRouter>
-            <AuthContext.Provider
+            <AppContext.Provider
                 value={{
+                    ...defaultContext,
+                    event: event,
                     authenticated: isAuthenticated,
-                    userName: "",
                     login: loginHandler,
                     logout: logoutHandler
                 }}
@@ -76,7 +78,7 @@ const App: React.FC = () => {
                         <Route component={r_404}/>
                     </Switch>
                 </div>
-            </AuthContext.Provider>
+            </AppContext.Provider>
         </BrowserRouter>
     );
 };
