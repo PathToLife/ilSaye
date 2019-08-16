@@ -1,4 +1,4 @@
-require('dotenv'); // Load passwords / ports from .env
+require('dotenv').config(); // Load passwords / ports from .env
 const express = require('express');
 const http = require('http');
 //const https = require('https');
