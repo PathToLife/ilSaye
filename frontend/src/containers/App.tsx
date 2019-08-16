@@ -1,6 +1,8 @@
+// Router and ReactFC
 import React, {useState, useEffect} from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
-import socketIOClient from "socket.io-client";
+
+// Styling
 import classes from './App.module.css';
 
 // Components
@@ -9,29 +11,37 @@ import MainPanel from "../components/MainPanel/MainPanel";
 import MainNav from "../components/Navigation/MainNav";
 import JoinEventPanel from "../components/JoinEvent/JoinEvent";
 
+// Context
 import AppContext, {defaultContext} from '../context/AppContext';
 
+// Sockets
+import socketIOClient from "socket.io-client";
+import socketsStore from "../sockets/socketStore";
 
+/**
+ * Main Component for the app
+ * Always Active, Holds key states, Inits AppContext.Provider
+ */
 const App: React.FC = () => {
 
-    const [endpoint] = useState('http://localhost:8080/publicapi');
+    // States
+    const [endpoint] = useState('http://localhost:8080');
     const [usersOnline, setUsersOnline] = useState(0);
+    const [isAuthenticated, setAuthenticated] = useState(false);
+    const [userName, setUsername] = useState('');
     const [event, setEvent] = useState(defaultContext.event);
 
+    // ComponentOnMount
     useEffect(() => {
-        console.log('run once');
-        const socket = socketIOClient(endpoint, {path: '/socket'});
-        socket.on("message", (data: string) => messageHandler(data));
-        socket.on("usersOnline", (data: number) => {
+        console.log('App Init');
+        console.log(socketsStore.main);
+        socketsStore.main = socketIOClient(`${endpoint}/publicapi`, {path: '/socket'});
+        socketsStore.main.on("message", (data: string) => messageHandler(data));
+        socketsStore.main.on("usersOnline", (data: number) => {
             setUsersOnline(data);
         });
-        socket.emit("hello", {map: 4, coords: '0.0'})
-
-
+        socketsStore.main.emit("hello", {map: 4, coords: '0.0'});
     }, [endpoint]);
-
-
-    const [isAuthenticated, setAuthenticated] = useState(false);
 
     const messageHandler = (data: string) => {
     };
@@ -39,24 +49,22 @@ const App: React.FC = () => {
     const loginHandler = (username: string, password: string) => {
         setAuthenticated(true);
         setEvent({...event, name:'MSA'});
+        setUsername(username);
+
+        socketsStore.private = socketIOClient(`${endpoint}/privateapi`, {path: '/socket'});
+        socketsStore.private.on("message", (data:string) => {
+
+        });
         return true
     };
 
     const logoutHandler = () => {
         setAuthenticated(false);
         setEvent(defaultContext.event);
+        setUsername('');
+        socketsStore.private = null;
         return true;
     };
-
-    const r_ScreenSaver = () => (
-        <ScreenSaver usersOnline={usersOnline}/>
-    );
-
-    const r_MainPanel = () => <MainPanel/>;
-
-    const r_JoinEventPanel = () => <JoinEventPanel/>;
-
-    const r_404 = () => <div>Not Found</div>;
 
     return (
         <BrowserRouter>
@@ -65,6 +73,7 @@ const App: React.FC = () => {
                     ...defaultContext,
                     event: event,
                     authenticated: isAuthenticated,
+                    userName: userName,
                     login: loginHandler,
                     logout: logoutHandler
                 }}
@@ -72,10 +81,10 @@ const App: React.FC = () => {
                 <div className={classes.App}>
                     <MainNav/>
                     <Switch>
-                        <Route exact path="/" component={r_ScreenSaver}/>
-                        <Route path="/dashboard" component={r_MainPanel}/>
-                        <Route path="/join" component={r_JoinEventPanel}/>
-                        <Route component={r_404}/>
+                        <Route exact path="/" component={() => <ScreenSaver usersOnline={usersOnline}/>}/>
+                        <Route path="/dashboard" component={() => <MainPanel/>}/>
+                        <Route path="/join" component={() => <JoinEventPanel/>}/>
+                        <Route component={() => <div>Not Found</div>}/>
                     </Switch>
                 </div>
             </AppContext.Provider>

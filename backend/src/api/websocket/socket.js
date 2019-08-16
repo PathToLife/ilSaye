@@ -27,12 +27,7 @@ const AttachSockets = (httpServer) => {
         console.log(`New client ${client.id} connected. ${publicCM.getNumberOnline()} online`);
         publicCM.updateClients();
 
-        socket
-            .use((socket, next) => {
-                console.log(socket.request.headers.cookie);
-                return next();
-            })
-            .on("joinEvent", (data) => {
+        socket.on("joinEvent", (data) => {
                 console.log(data.code);
             });
 
@@ -41,6 +36,14 @@ const AttachSockets = (httpServer) => {
             publicCM.removeClient(client);
         });
     });
+
+    io.of('/privateapi').on("connection", socket => {
+        console.log(`Private Client Joined`);
+
+        socket.on("disconnect", () => {
+            console.log(`Private Client disconnected`);
+        });
+    })
 };
 
 module.exports = AttachSockets;
