@@ -1,8 +1,10 @@
 const {describe, it} = require('mocha');
 const expect = require('expect');
-const TestText = require('./models/model_test');
+
 
 const db = require('./db.js');
+const TestText = require('./models/model_test');
+const modelUser = require('./models/model_user');
 
 describe('Sequelize Connection Test', () => {
     let authed = false;
@@ -31,5 +33,11 @@ describe('Sequelize Connection Test', () => {
         TestText.create({text: "Sequelize"}).then(() => {
             done()
         }).catch(err => done(err));
-    })
+    });
+
+    it('should create table for model', function (done) {
+        modelUser.sync({alter: true}).then(() => done())
+            .catch(err => done(err));
+    }).timeout(15000)
+
 });

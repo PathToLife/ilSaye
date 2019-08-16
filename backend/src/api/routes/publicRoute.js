@@ -5,9 +5,17 @@ let active = false;
 const router = express.Router();
 
 const model_test = require('../../db/models/model_test');
+const db = require('../../db/db');
 
 router.get('/', (req, res) => {
-    res.send('api v1.0');
+    let authed = false;
+    db.authenticate().then(() => {
+        authed = true;
+    }).catch(err => done(err)
+    ).finally(() => {
+        res.send(`api v1.0 DB ${authed ? 'connected': process.env.DB_HOST}`);
+    });
+
 });
 router.get('/status', (req, res) => {
     res.send(`Active ${active}`);
