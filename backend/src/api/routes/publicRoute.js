@@ -1,7 +1,5 @@
 const express = require('express');
 
-let active = false;
-
 const router = express.Router();
 
 const model_test = require('../../db/models/model_test');
@@ -17,13 +15,6 @@ router.get('/', (req, res) => {
     });
 
 });
-router.get('/status', (req, res) => {
-    res.send(`Active ${active}`);
-});
-router.route('/control').get((req, res) => {
-    active = !active;
-    res.send('Ok');
-});
 
 router.get('/dbtest', (req, res) => {
     model_test.findOne().then(data => {
@@ -35,5 +26,13 @@ router.get('/dbtest', (req, res) => {
     })
 });
 
+// let active = false;
+// router.get('/status', (req, res) => {
+//     res.send(`Active ${active}`);
+// });
+// router.route('/control').get((req, res) => {
+//     active = !active;
+//     res.send('Ok');
+// });
 
 module.exports = router;
