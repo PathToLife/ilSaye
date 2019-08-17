@@ -6,6 +6,7 @@ trigger:
   paths:
     exclude:
     - README.md
+    - frontend/*
 
 pool:
   vmImage: 'ubuntu-latest'
