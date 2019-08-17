@@ -1,5 +1,12 @@
 trigger:
-- master
+  branches:
+      include:
+      - master
+      - releases/*
+  paths:
+    exclude:
+    - README.md
+    - backend/*
 
 variables:
   REACT_APP_BACKEND_ENDPOINT: 'https://ilsayebackend.azurewebsites.net'
