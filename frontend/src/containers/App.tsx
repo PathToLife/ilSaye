@@ -10,13 +10,16 @@ import ScreenSaver from "../components/ScreenSaver/ScreenSaver";
 import MainPanel from "../components/MainPanel/MainPanel";
 import MainNav from "../components/Navigation/MainNav";
 import JoinEventPanel from "../components/JoinEvent/JoinEvent";
+import Notices from "../components/Notifications/Notices";
 
 // Context
 import AppContext, {defaultContext} from '../context/AppContext';
+import {SetLocalData, GetLocalData} from '../context/VersionedLocalStorage';
 
 // Sockets
 import socketIOClient from "socket.io-client";
 import socketsStore from "../sockets/socketStore";
+import {NoticeType} from "../components/Notifications/Notice";
 
 /**
  * Main Component for the app
@@ -30,11 +33,16 @@ const App: React.FC = () => {
     const [isAuthenticated, setAuthenticated] = useState(false);
     const [userName, setUsername] = useState('');
     const [event, setEvent] = useState(defaultContext.event);
+    const [notifications, setNotifications] = useState([] as NoticeType[]);
+
+    const setNotificationsHandler = (notifications: NoticeType[]) => {
+        SetLocalData('notifications', JSON.stringify(notifications));
+        setNotifications(notifications)
+    };
 
     // ComponentOnMount
     useEffect(() => {
         console.log('App Init');
-        console.log(socketsStore.public);
         socketsStore.public = socketIOClient(`${endpoint}/publicapi`, {
             path: '/socket',
             transports: ['websocket']
@@ -44,6 +52,12 @@ const App: React.FC = () => {
             setUsersOnline(data);
         });
         socketsStore.public.emit("hello", {map: 4, coords: '0.0'});
+
+        // Get old notifications
+        const localNotices = GetLocalData('notifications');
+        if (localNotices != null) setNotifications(JSON.parse(localNotices));
+        if (localNotices === null) setNotifications(defaultContext.notifications);
+
     }, [endpoint]);
 
     const messageHandler = (data: string) => {
@@ -51,14 +65,14 @@ const App: React.FC = () => {
 
     const loginHandler = (username: string, password: string) => {
         setAuthenticated(true);
-        setEvent({...event, name:'MSA'});
+        setEvent({...event, name: 'MSA'});
         setUsername(username);
 
         socketsStore.private = socketIOClient(`${endpoint}/privateapi`, {
             path: '/socket',
             transports: ['websocket']
         });
-        socketsStore.private.on("message", (data:string) => {
+        socketsStore.private.on("message", (data: string) => {
 
         });
         return true
@@ -82,11 +96,14 @@ const App: React.FC = () => {
                     userName: userName,
                     login: loginHandler,
                     logout: logoutHandler,
-                    endpoint: endpoint
+                    endpoint: endpoint,
+                    notifications: notifications,
+                    setNotifications: setNotificationsHandler
                 }}
             >
                 <div className={classes.App}>
                     <MainNav/>
+                    <Notices/>
                     <Switch>
                         <Route exact path="/" component={() => <ScreenSaver usersOnline={usersOnline}/>}/>
                         <Route path="/dashboard" component={() => <MainPanel/>}/>

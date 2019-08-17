@@ -11,6 +11,8 @@ import axios from "axios";
 import classes from "./JoinEvent.module.css";
 import AppContext from "../../context/AppContext";
 import GoogleLogin from "react-google-login";
+import SignUpForm from "./SignUpForm";
+import LoginForm from "./LoginForm";
 
 type joinEventPanelTypes = {
 
@@ -19,8 +21,6 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
     const authContext = useContext(AppContext);
 
     if (authContext.authenticated) return <Redirect to="dashboard"/>;
-
-    const colConfig = {xs: 12, md: 6, lg: 3};
 
     const responseGoogleOk = (res: any) => {
         axios.post(`${authContext.endpoint}/api/v1/logingoogle?token=${res.accessToken}`)
@@ -36,6 +36,7 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
         console.log(`Error ${res}`);
     };
 
+    const colConfig = {xs: 12, md: 6, lg: 5};
 
     return (
         <div className={classes.JoinEvent}>
@@ -43,11 +44,6 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
                 <Row>
                     <Col>
                         <div className={classes.fontTitle}>JoinEvent</div>
-                    </Col>
-                </Row>
-                <Row className="mt-3 justify-content-md-center">
-                    <Col {...colConfig}>
-
                     </Col>
                 </Row>
                 <Row className="mt-3 mt-lg-5 justify-content-md-center">
@@ -62,7 +58,7 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
 
                                 <Accordion.Collapse eventKey="0">
                                     <Card.Body>
-                                        To be implemented, needs hashing
+                                        <LoginForm loginHandler={authContext.login}/>
                                     </Card.Body>
                                 </Accordion.Collapse>
                             </Card>
@@ -78,6 +74,25 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
                             onFailure={responseGoogleErr}
                             cookiePolicy={'single_host_origin'}
                         />
+                    </Col>
+                </Row>
+                <Row className="mt-3 justify-content-md-center">
+                    <Col {...colConfig}>
+                        <Accordion className="m-auto w-100">
+                            <Card className={classes.card}>
+                                <Card.Header className="p-0">
+                                    <Accordion.Toggle as={Button} eventKey="0">
+                                        Sign Up
+                                    </Accordion.Toggle>
+                                </Card.Header>
+
+                                <Accordion.Collapse eventKey="0">
+                                    <Card.Body>
+                                        <SignUpForm signUpHandler={authContext.login}/>
+                                    </Card.Body>
+                                </Accordion.Collapse>
+                            </Card>
+                        </Accordion>
                     </Col>
                 </Row>
                 <Row className="mt-3 justify-content-md-center">

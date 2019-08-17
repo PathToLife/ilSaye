@@ -12,9 +12,7 @@ const MainPanel: React.FC = () => {
     return (
         <Container>
             <Row>
-                <Col>
-                    <ChatPanel/>
-                </Col>
+                <ChatPanel/>
             </Row>
             <Row>
                 <Col>1 of 3</Col>
