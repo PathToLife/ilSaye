@@ -97,7 +97,7 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
                 </Row>
                 <Row className="mt-3 justify-content-md-center">
                     <Col {...colConfig}>
-                        <Button variant="primary" className="w-100" onClick={() => authContext.login('dwada', 'dd')}>
+                        <Button variant="primary" className="w-100" onClick={() => authContext.login('PublicTestUser', '20191234')}>
                             !Dev skip login!
                         </Button>
                     </Col>
