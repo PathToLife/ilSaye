@@ -31,11 +31,16 @@ const App: React.FC = () => {
     const [isAuthenticated, setAuthenticated] = useState(false);
     const [userName, setUsername] = useState('');
     const [event, setEvent] = useState(defaultContext.event);
+    const [notifications, setNotifications] = useState(
+        [
+            {message: "hi", level: NoticeLevel.Neutral},
+            {message: "hi2", level: NoticeLevel.Bad},
+            {message: "hi123", level: NoticeLevel.Warning}
+        ]);
 
     // ComponentOnMount
     useEffect(() => {
         console.log('App Init');
-        console.log(socketsStore.public);
         socketsStore.public = socketIOClient(`${endpoint}/publicapi`, {
             path: '/socket',
             transports: ['websocket']
@@ -52,14 +57,14 @@ const App: React.FC = () => {
 
     const loginHandler = (username: string, password: string) => {
         setAuthenticated(true);
-        setEvent({...event, name:'MSA'});
+        setEvent({...event, name: 'MSA'});
         setUsername(username);
 
         socketsStore.private = socketIOClient(`${endpoint}/privateapi`, {
             path: '/socket',
             transports: ['websocket']
         });
-        socketsStore.private.on("message", (data:string) => {
+        socketsStore.private.on("message", (data: string) => {
 
         });
         return true
@@ -84,7 +89,8 @@ const App: React.FC = () => {
                     login: loginHandler,
                     logout: logoutHandler,
                     endpoint: endpoint,
-                    notifications: [{message:"hi", level: NoticeLevel.Bad}]
+                    notifications: notifications,
+                    setNotifications: setNotifications
                 }}
             >
                 <div className={classes.App}>

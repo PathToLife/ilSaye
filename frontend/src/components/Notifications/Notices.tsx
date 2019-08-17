@@ -6,7 +6,9 @@ const Notices: React.FC = () => {
     const context = useContext(AppContext);
 
     const removeNotice = (index: number) => {
-        context.notifications.splice(index, 1);
+        const notificationsCopy = [...context.notifications];
+        notificationsCopy.splice(index, 1);
+        context.setNotifications(notificationsCopy);
     };
 
     const noticesRender = () => {
@@ -15,6 +17,7 @@ const Notices: React.FC = () => {
             const {message, level} = notice;
             noticeElems.push(
                 <Notice
+                    key={index}
                     message={message}
                     level={level}
                     dismiss={() => removeNotice(index)}

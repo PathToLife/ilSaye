@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Dispatch, SetStateAction} from "react";
 import {NoticeType} from "../components/Notifications/Notice";
 export {NoticeLevel} from "../components/Notifications/Notice"; // Re-export here for ease of import around the place
 
@@ -9,7 +9,8 @@ interface defaultContextType {
     login: (username:string, password:string) => any,
     logout: () => any,
     endpoint: string,
-    notifications: NoticeType[]
+    notifications: NoticeType[],
+    setNotifications: Dispatch<SetStateAction<any>>;
 }
 
 export const defaultContext: defaultContextType = {
@@ -22,7 +23,8 @@ export const defaultContext: defaultContextType = {
     login: (userName:string, password:string) => {},
     logout: () => {},
     endpoint: '',
-    notifications: []
+    notifications: [],
+    setNotifications: () => {}
 };
 
 const AppContext = React.createContext(defaultContext);

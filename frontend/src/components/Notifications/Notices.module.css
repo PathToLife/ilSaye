@@ -1,9 +1,15 @@
 .Notice {
     width: 100%;
+    margin: 0;
 }
 
 .dismissButton {
+    background-color: transparent;
+    border: none;
+}
 
+.dismissButton i {
+    color: white;
 }
 
 .noticeText {
@@ -31,7 +37,7 @@
 }
 
 .blue {
-    background-color: blue;
+    background-color: lightblue;
     color: white;
 }
 
