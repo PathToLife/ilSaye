@@ -1,25 +1,22 @@
 // Router and ReactFC
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
-
 // Styling
 import classes from './App.module.css';
-
 // Components
 import ScreenSaver from "../components/ScreenSaver/ScreenSaver";
 import MainPanel from "../components/MainPanel/MainPanel";
 import MainNav from "../components/Navigation/MainNav";
 import JoinEventPanel from "../components/JoinEvent/JoinEvent";
 import Notices from "../components/Notifications/Notices";
-
 // Context
-import AppContext, {defaultContext} from '../context/AppContext';
-import {SetLocalData, GetLocalData} from '../context/VersionedLocalStorage';
-
-// Sockets
+import AppContext, {defaultContext, NoticeLevel} from '../context/AppContext';
+import {GetLocalData, SetLocalData} from '../context/VersionedLocalStorage';
+// Sockets & axios
 import socketIOClient from "socket.io-client";
 import socketsStore from "../sockets/socketStore";
 import {NoticeType} from "../components/Notifications/Notice";
+import axios from "axios";
 
 /**
  * Main Component for the app
@@ -40,9 +37,7 @@ const App: React.FC = () => {
         setNotifications(notifications)
     };
 
-    // ComponentOnMount
-    useEffect(() => {
-        console.log('App Init');
+    const enablePublicSocket = () => {
         socketsStore.public = socketIOClient(`${endpoint}/publicapi`, {
             path: '/socket',
             transports: ['websocket']
@@ -52,6 +47,24 @@ const App: React.FC = () => {
             setUsersOnline(data);
         });
         socketsStore.public.emit("hello", {map: 4, coords: '0.0'});
+    };
+
+    const enablePrivateSocket = () => {
+        socketsStore.private = socketIOClient(`${endpoint}/privateapi`, {
+            path: '/socket',
+            transports: ['websocket']
+        });
+        socketsStore.private.on("message", (data: string) => {
+
+        });
+    };
+    const disablePrivateSocket = () => {socketsStore.private = null};
+
+    // ComponentOnMount
+    useEffect(() => {
+        console.log('App Init');
+
+        enablePublicSocket();
 
         // Get old notifications
         const localNotices = GetLocalData('notifications');
@@ -61,20 +74,43 @@ const App: React.FC = () => {
     }, [endpoint]);
 
     const messageHandler = (data: string) => {
+
     };
 
-    const loginHandler = (username: string, password: string) => {
+    const addNotificationsHandler = (message: string, level: NoticeLevel) => {
+        const noticesCopy = [...notifications];
+        noticesCopy.push({message, level});
+        setNotificationsHandler(noticesCopy);
+    };
+
+    const setLoggedInDetails = (username: string, eventName:string = 'MSA') => {
         setAuthenticated(true);
-        setEvent({...event, name: 'MSA'});
+        setEvent({...event, name: eventName});
         setUsername(username);
+        setNotificationsHandler([]);
+    };
 
-        socketsStore.private = socketIOClient(`${endpoint}/privateapi`, {
-            path: '/socket',
-            transports: ['websocket']
-        });
-        socketsStore.private.on("message", (data: string) => {
+    const loginHandler = (email: string, password: string): boolean => {
+        axios.post(`${endpoint}/api/v1/login`, {
+            email, password
+        }).then(response => {
+            console.log(response);
+            if (response.status === 200) {
+                const userData = JSON.parse(response.data);
+                setLoggedInDetails(userData.username);
+                enablePrivateSocket();
+                return true;
+            }
+        }).catch(error => {
+            if (error.response && error.response.status === 401) {
+                addNotificationsHandler(error.response.data.msg, NoticeLevel.Bad);
+            } else {
+                addNotificationsHandler(error.toString(), NoticeLevel.Bad);
+            }
 
+            return false
         });
+
         return true
     };
 
@@ -82,7 +118,7 @@ const App: React.FC = () => {
         setAuthenticated(false);
         setEvent(defaultContext.event);
         setUsername('');
-        socketsStore.private = null;
+        disablePrivateSocket();
         return true;
     };
 
@@ -94,16 +130,17 @@ const App: React.FC = () => {
                     event: event,
                     authenticated: isAuthenticated,
                     userName: userName,
-                    login: loginHandler,
-                    logout: logoutHandler,
+                    setLoggedInDetails: setLoggedInDetails,
+                    loginRequest: loginHandler,
+                    logoutRequest: logoutHandler,
                     endpoint: endpoint,
                     notifications: notifications,
-                    setNotifications: setNotificationsHandler
+                    addNotifications: addNotificationsHandler
                 }}
             >
                 <div className={classes.App}>
                     <MainNav/>
-                    <Notices/>
+                    <Notices setNotificationsHandler={setNotificationsHandler}/>
                     <Switch>
                         <Route exact path="/" component={() => <ScreenSaver usersOnline={usersOnline}/>}/>
                         <Route path="/dashboard" component={() => <MainPanel/>}/>

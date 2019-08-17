@@ -2,6 +2,7 @@ require('dotenv').config(); // Load passwords / ports from .env
 const express = require('express');
 const http = require('http');
 const {AttachSwagger, version} = require('./api/swagger/swag');
+const bodyParser = require('body-parser');
 //const https = require('https');
 
 // Cross Origin Request
@@ -30,6 +31,9 @@ const app = express();
 app.use(cors({
     origin: [/\.eozmon\.com$/, /\.azurewebsites\.net$/, /localhost:[0-9]+$/, HOST]
 }));
+// parse application/json
+app.use(bodyParser.json());
+// Main page info
 app.get('/', (req, res) => {
     res.send(`API Server ${BUILD_VERSION} <br/> ${(new Date()).toString()}`);
 });

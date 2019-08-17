@@ -32,16 +32,86 @@ paths:
       tags:
         - auth
       summary: standard user pass login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authenticatedUserResponse'
+        401:
+          description: fail
+        503:
+          description: server error
   /logingoogle:
     post:
       tags:
         - auth
       summary: google oauth2
+      description: validates an oauth token from user, making sure it is both valid and for the intended website
+      parameters:
+        - in: path
+          name: token
+          schema:
+            type: string
+          required: true
+          description: token from google after successful login
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authenticatedUserResponse'
+        401:
+          description: fail
+        503:
+          description: server error, response from google auth server wasn't understood
   /loginfacebook:
     post:
       tags:
         - auth
       summary: facebook oauth
+  /signup:
+    post:
+      tags:
+        - auth
+      summary: signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type:
+                object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: ok
+        400:
+          descritption: failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+
+
+
   /logout:
     get:
       tags:
@@ -104,6 +174,26 @@ paths:
 
 components:
   schemas:
+    authenticatedUserResponse:
+      title: Authenticated user response
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        eventName:
+          type: string
+          nullable: true
+          description: last joined event name
+    errorResponse:
+      title: Error Response
+      type: object
+      properties:
+        errorCode:
+          type: number
+        msg:
+          type: string
     testtextModel:
       title: Testtext db model
       type: object
@@ -117,16 +207,3 @@ components:
         date:
           type: string
           description: date time
-    listPersons:
-      title: List
-      type: array
-      items:
-        required:
-          - username
-        properties:
-          firstName:
-            type: string
-          lastName:
-            type: string
-          username:
-            type: string

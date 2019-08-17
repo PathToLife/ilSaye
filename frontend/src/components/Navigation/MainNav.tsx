@@ -25,7 +25,7 @@ const MainNav: React.FC = () => {
                 <Navbar.Text className="pr-2">
                     Signed in as: {appContext.userName}
                 </Navbar.Text>
-                <Nav.Link onClick={appContext.logout}>Logout</Nav.Link>
+                <Nav.Link onClick={appContext.logoutRequest}>Logout</Nav.Link>
             </Nav>
         ];
     } else {

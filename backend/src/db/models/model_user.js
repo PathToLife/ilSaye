@@ -3,12 +3,13 @@ const SQ = require('sequelize');
 
 const User = db.define('user', {
     id: {
-        type: SQ.STRING,
-        primaryKey: true
+        type: SQ.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
     },
     username: {
         type: SQ.STRING,
-        primaryKey: true
+        allowNull: false
     },
     email: {
         type: SQ.STRING,
@@ -30,6 +31,11 @@ const User = db.define('user', {
         type: SQ.STRING,
         default: null
     }
-}, {});
+}, {
+    indexes: [
+        {unique: true, fields: ['username']},
+        {unique: true, fields: ['email']}
+    ]
+});
 
 module.exports = User;

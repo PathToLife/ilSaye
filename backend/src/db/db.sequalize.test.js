@@ -15,7 +15,7 @@ const modelMessage = require('./models/model_message');
 describe('Sequelize Connection Test', () => {
     let authed = false;
     const need_auth = (test) => {
-      if (!authed) test.skip();
+        if (!authed) test.skip();
     };
 
     it('should be authenticated', done => {
@@ -56,4 +56,38 @@ describe('Sequelize Connection Test', () => {
             .catch(err => done(err));
     }).timeout(15000);
 
+    describe('data read/write/delete test', () => {
+        const testString = 'modelTest1238089Text';
+
+        it('should write data to test_table', done => {
+            modelTest.create({
+                text: testString
+            }).then(textObj => {
+                expect(textObj.text).toEqual(testString);
+                done();
+            }).catch(e => done(e))
+        });
+
+        it('should get data from test_table', done => {
+            modelTest.findOne({where: {text: testString}}).then(data => {
+                expect(data.text).toEqual(testString);
+                done()
+            }).catch(e => done(e))
+        });
+
+        it('should delete data from test_table', done => {
+            modelTest.destroy({where: {text: testString}}).then(data => {
+                console.log(data);
+                done();
+            }).catch(e => done(e))
+        });
+
+        it('should not find string in test_table', done => {
+            modelTest.findAll({where: {text: testString}}).then(data => {
+                expect(data).toEqual([]);
+                done();
+            }).catch(e => done(e));
+        });
+
+    });
 });

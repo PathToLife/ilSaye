@@ -2,13 +2,17 @@ import React, {useContext} from "react";
 import AppContext from "../../context/AppContext";
 import Notice from "./Notice";
 
-const Notices: React.FC = () => {
+type noticesType = {
+    setNotificationsHandler: any
+}
+
+const Notices: React.FC<noticesType> = ({setNotificationsHandler}) => {
     const context = useContext(AppContext);
 
     const removeNotice = (index: number) => {
         const notificationsCopy = [...context.notifications];
         notificationsCopy.splice(index, 1);
-        context.setNotifications(notificationsCopy);
+        setNotificationsHandler(notificationsCopy);
     };
 
     const noticesRender = () => {
