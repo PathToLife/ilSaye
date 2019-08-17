@@ -42,12 +42,14 @@ const Notice: React.FC<noticeComponent> = ({message, dismiss, level}) => {
     return (
         <Row className={cx(levelStyling, classes.Notice)}>
             <Col>
-                <div className={cx(classes.noticeText, "float-right")}>
+            </Col>
+            <Col>
+                <div className={cx(classes.noticeText, "m-auto")}>
                     {message}
                 </div>
             </Col>
             <Col>
-                <button onClick={dismiss} className={cx(classes.dismissButton, "float-left")}>
+                <button onClick={dismiss} className={cx(classes.dismissButton)}>
                     <i className="fas fa-times"/>
                 </button>
             </Col>

@@ -1,11 +1,14 @@
 .Notice {
     width: 100%;
     margin: 0;
+    transition: top 0.4s;
 }
 
 .dismissButton {
     background-color: transparent;
     border: none;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .dismissButton i {
@@ -18,7 +21,8 @@
 
 .orange {
     background-color: orange;
-    color: blue
+    color: black;
+    font-weight: bold;
 }
 
 .grey {

@@ -11,7 +11,8 @@ import axios from "axios";
 import classes from "./JoinEvent.module.css";
 import AppContext from "../../context/AppContext";
 import GoogleLogin from "react-google-login";
-import Form from "react-bootstrap/Form";
+import SignUpForm from "./SignUpForm";
+import LoginForm from "./LoginForm";
 
 type joinEventPanelTypes = {
 
@@ -62,25 +63,7 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
 
                                 <Accordion.Collapse eventKey="0">
                                     <Card.Body>
-                                        <Form>
-                                            <Form.Group controlId="formBasicEmail">
-                                                <Form.Label>Email address</Form.Label>
-                                                <Form.Control type="email" placeholder="Enter email" />
-                                                <Form.Text className="text-muted">
-                                                    We'll never share your email with anyone else.
-                                                </Form.Text>
-                                            </Form.Group>
-                                            <Form.Group controlId="formBasicPassword">
-                                                <Form.Label>Password</Form.Label>
-                                                <Form.Control type="password" placeholder="Password" />
-                                            </Form.Group>
-                                            <Form.Group controlId="formBasicChecbox">
-                                                <Form.Check type="checkbox" label="Check me out" />
-                                            </Form.Group>
-                                            <Button variant="primary" type="submit">
-                                                Submit
-                                            </Button>
-                                        </Form>
+                                        <LoginForm loginHandler={authContext.login}/>
                                     </Card.Body>
                                 </Accordion.Collapse>
                             </Card>
@@ -96,6 +79,25 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
                             onFailure={responseGoogleErr}
                             cookiePolicy={'single_host_origin'}
                         />
+                    </Col>
+                </Row>
+                <Row className="mt-3 justify-content-md-center">
+                    <Col {...colConfig}>
+                        <Accordion className="m-auto w-100">
+                            <Card className={classes.card}>
+                                <Card.Header className="p-0">
+                                    <Accordion.Toggle as={Button} eventKey="0">
+                                        Sign Up
+                                    </Accordion.Toggle>
+                                </Card.Header>
+
+                                <Accordion.Collapse eventKey="0">
+                                    <Card.Body>
+                                        <SignUpForm signUpHandler={authContext.login}/>
+                                    </Card.Body>
+                                </Accordion.Collapse>
+                            </Card>
+                        </Accordion>
                     </Col>
                 </Row>
                 <Row className="mt-3 justify-content-md-center">

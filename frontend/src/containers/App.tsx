@@ -13,11 +13,13 @@ import JoinEventPanel from "../components/JoinEvent/JoinEvent";
 import Notices from "../components/Notifications/Notices";
 
 // Context
-import AppContext, {defaultContext, NoticeLevel} from '../context/AppContext';
+import AppContext, {defaultContext} from '../context/AppContext';
+import {SetLocalData, GetLocalData} from '../context/VersionedLocalStorage';
 
 // Sockets
 import socketIOClient from "socket.io-client";
 import socketsStore from "../sockets/socketStore";
+import {NoticeType} from "../components/Notifications/Notice";
 
 /**
  * Main Component for the app
@@ -31,12 +33,12 @@ const App: React.FC = () => {
     const [isAuthenticated, setAuthenticated] = useState(false);
     const [userName, setUsername] = useState('');
     const [event, setEvent] = useState(defaultContext.event);
-    const [notifications, setNotifications] = useState(
-        [
-            {message: "hi", level: NoticeLevel.Neutral},
-            {message: "hi2", level: NoticeLevel.Bad},
-            {message: "hi123", level: NoticeLevel.Warning}
-        ]);
+    const [notifications, setNotifications] = useState([] as NoticeType[]);
+
+    const setNotificationsHandler = (notifications: NoticeType[]) => {
+        SetLocalData('notifications', JSON.stringify(notifications));
+        setNotifications(notifications)
+    };
 
     // ComponentOnMount
     useEffect(() => {
@@ -50,6 +52,12 @@ const App: React.FC = () => {
             setUsersOnline(data);
         });
         socketsStore.public.emit("hello", {map: 4, coords: '0.0'});
+
+        // Get old notifications
+        const localNotices = GetLocalData('notifications');
+        if (localNotices != null) setNotifications(JSON.parse(localNotices));
+        if (localNotices === null) setNotifications(defaultContext.notifications);
+
     }, [endpoint]);
 
     const messageHandler = (data: string) => {
@@ -90,7 +98,7 @@ const App: React.FC = () => {
                     logout: logoutHandler,
                     endpoint: endpoint,
                     notifications: notifications,
-                    setNotifications: setNotifications
+                    setNotifications: setNotificationsHandler
                 }}
             >
                 <div className={classes.App}>
