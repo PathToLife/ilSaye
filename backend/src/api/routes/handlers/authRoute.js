@@ -32,8 +32,8 @@ router.post('/login', (req, res) => {
                     sendError(res, 401, 'Email or password wrong');
                     return
                 }
-                if (userObj.password === null) {
-                    sendError(res, 401, 'Email or password wrong');
+                if (userObj.password_hash === null) {
+                    sendError(res, 401, 'You need to assign password to this account, please login using something else');
                     return
                 }
 
@@ -53,26 +53,28 @@ router.post('/login', (req, res) => {
 router.post('/logingoogle', async (req, res) => {
     if (req.query.token !== undefined && req.query.token.length > 10) {
         validateToken(req.query.token)
-            .then(async (user) => {
+            .then(async (googleUser) => {
                 try {
                     // We have a validated user
                     // Now check if there is an account
                     // Else create
                     await UserDB.findOne({
                         where: {
-                            email: user.email
+                            email: googleUser.email
                         }
                     }).then(userObj => {
-                            if (userObj.email) {
+                            if (userObj !== null && userObj.email) {
                                 sendAuthUser(res, userObj.username, userObj.email, userObj.email);
                             } else {
-
                                 // user not found
                                 // Create User with random username
                                 UserDB.create({
+                                    email: googleUser.email,
                                     username: 'GG-' + randName(),
                                     password: null,
                                     google: "yes"
+                                }).then(userObj => {
+                                    sendAuthUser(res, userObj.username, userObj.email, userObj.email);
                                 }).catch(e => sendError(res, 503, e));
                             }
                         }
