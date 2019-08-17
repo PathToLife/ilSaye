@@ -11,6 +11,7 @@ import axios from "axios";
 import classes from "./JoinEvent.module.css";
 import AppContext from "../../context/AppContext";
 import GoogleLogin from "react-google-login";
+import Form from "react-bootstrap/Form";
 
 type joinEventPanelTypes = {
 
@@ -19,8 +20,6 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
     const authContext = useContext(AppContext);
 
     if (authContext.authenticated) return <Redirect to="dashboard"/>;
-
-    const colConfig = {xs: 12, md: 6, lg: 3};
 
     const responseGoogleOk = (res: any) => {
         axios.post(`${authContext.endpoint}/api/v1/logingoogle?token=${res.accessToken}`)
@@ -36,6 +35,7 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
         console.log(`Error ${res}`);
     };
 
+    const colConfig = {xs: 12, md: 6, lg: 5};
 
     return (
         <div className={classes.JoinEvent}>
@@ -62,7 +62,25 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
 
                                 <Accordion.Collapse eventKey="0">
                                     <Card.Body>
-                                        To be implemented, needs hashing
+                                        <Form>
+                                            <Form.Group controlId="formBasicEmail">
+                                                <Form.Label>Email address</Form.Label>
+                                                <Form.Control type="email" placeholder="Enter email" />
+                                                <Form.Text className="text-muted">
+                                                    We'll never share your email with anyone else.
+                                                </Form.Text>
+                                            </Form.Group>
+                                            <Form.Group controlId="formBasicPassword">
+                                                <Form.Label>Password</Form.Label>
+                                                <Form.Control type="password" placeholder="Password" />
+                                            </Form.Group>
+                                            <Form.Group controlId="formBasicChecbox">
+                                                <Form.Check type="checkbox" label="Check me out" />
+                                            </Form.Group>
+                                            <Button variant="primary" type="submit">
+                                                Submit
+                                            </Button>
+                                        </Form>
                                     </Card.Body>
                                 </Accordion.Collapse>
                             </Card>

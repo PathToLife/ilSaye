@@ -10,9 +10,10 @@ import ScreenSaver from "../components/ScreenSaver/ScreenSaver";
 import MainPanel from "../components/MainPanel/MainPanel";
 import MainNav from "../components/Navigation/MainNav";
 import JoinEventPanel from "../components/JoinEvent/JoinEvent";
+import Notices from "../components/Notifications/Notices";
 
 // Context
-import AppContext, {defaultContext} from '../context/AppContext';
+import AppContext, {defaultContext, NoticeLevel} from '../context/AppContext';
 
 // Sockets
 import socketIOClient from "socket.io-client";
@@ -82,11 +83,13 @@ const App: React.FC = () => {
                     userName: userName,
                     login: loginHandler,
                     logout: logoutHandler,
-                    endpoint: endpoint
+                    endpoint: endpoint,
+                    notifications: [{message:"hi", level: NoticeLevel.Bad}]
                 }}
             >
                 <div className={classes.App}>
                     <MainNav/>
+                    <Notices/>
                     <Switch>
                         <Route exact path="/" component={() => <ScreenSaver usersOnline={usersOnline}/>}/>
                         <Route path="/dashboard" component={() => <MainPanel/>}/>

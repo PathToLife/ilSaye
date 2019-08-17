@@ -1,0 +1,41 @@
+.Notice {
+    width: 100%;
+}
+
+.dismissButton {
+
+}
+
+.noticeText {
+
+}
+
+.orange {
+    background-color: orange;
+    color: blue
+}
+
+.grey {
+    background-color: grey;
+    color: white;
+}
+
+.red {
+    background-color: red;
+    color: white;
+}
+
+.black {
+    background-color: black;
+    color: white;
+}
+
+.blue {
+    background-color: blue;
+    color: white;
+}
+
+.green {
+    background-color: green;
+    color: white;
+}

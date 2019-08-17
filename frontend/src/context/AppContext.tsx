@@ -1,6 +1,18 @@
 import React from "react";
+import {NoticeType} from "../components/Notifications/Notice";
+export {NoticeLevel} from "../components/Notifications/Notice"; // Re-export here for ease of import around the place
 
-export const defaultContext = {
+interface defaultContextType {
+    authenticated: boolean,
+    event: {name: string, id:string},
+    userName: string,
+    login: (username:string, password:string) => any,
+    logout: () => any,
+    endpoint: string,
+    notifications: NoticeType[]
+}
+
+export const defaultContext: defaultContextType = {
     authenticated: false,
     event: {
         name: '',
@@ -9,7 +21,8 @@ export const defaultContext = {
     userName: '',
     login: (userName:string, password:string) => {},
     logout: () => {},
-    endpoint: ''
+    endpoint: '',
+    notifications: []
 };
 
 const AppContext = React.createContext(defaultContext);
