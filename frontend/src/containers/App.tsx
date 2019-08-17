@@ -87,6 +87,7 @@ const App: React.FC = () => {
         setAuthenticated(true);
         setEvent({...event, name: eventName});
         setUsername(username);
+        setNotificationsHandler([]);
     };
 
     const loginHandler = (email: string, password: string): boolean => {
