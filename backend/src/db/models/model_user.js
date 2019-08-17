@@ -8,7 +8,7 @@ const User = db.define('user', {
     },
     username: {
         type: SQ.STRING,
-        primaryKey: true
+        allowNull: false
     },
     email: {
         type: SQ.STRING,
@@ -30,6 +30,10 @@ const User = db.define('user', {
         type: SQ.STRING,
         default: null
     }
-}, {});
+}, {
+    indexes: [
+        {unique: true, fields: ['username']}
+    ]
+});
 
 module.exports = User;
