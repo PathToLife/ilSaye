@@ -46,9 +46,8 @@ const MainNav: React.FC = () => {
                     <img
                         alt=""
                         src="/ilSayeLogo192.png"
-                        width="30"
-                        height="30"
-                        className="d-inline-block align-top pr-1"
+                        height="30px"
+                        className="d-inline-block align-top mr-md-3 mr-1"
                     />
                     {appContext.event.name ? appContext.event.name : 'ilSaye'}
                 </Navbar.Brand>
