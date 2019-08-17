@@ -7,8 +7,9 @@ interface defaultContextType {
     authenticated: boolean,
     event: {name: string, id:string},
     userName: string,
-    login: (username:string, password:string) => any,
-    logout: () => any,
+    setLoggedInDetails: (username:string, eventName?:string) => void,
+    loginRequest: (username:string, password:string) => any,
+    logoutRequest: () => any,
     endpoint: string,
     notifications: NoticeType[],
     addNotifications: (msg: string, level: NoticeLevel) => void;
@@ -21,8 +22,9 @@ export const defaultContext: defaultContextType = {
         id: ''
     },
     userName: '',
-    login: (userName:string, password:string) => {},
-    logout: () => {},
+    setLoggedInDetails: (username:string, eventName?:string) => {},
+    loginRequest: (userName:string, password:string) => {},
+    logoutRequest: () => {},
     endpoint: '',
     notifications: [
         {message: "Looks like this is the first time you're here since an update, Welcome =)", level: NoticeLevel.Good},

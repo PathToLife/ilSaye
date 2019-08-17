@@ -83,24 +83,25 @@ const App: React.FC = () => {
         setNotificationsHandler(noticesCopy);
     };
 
-    const loginHandler = (email: string, password: string): boolean => {
+    const setLoggedInDetails = (username: string, eventName:string = 'MSA') => {
+        setAuthenticated(true);
+        setEvent({...event, name: eventName});
+        setUsername(username);
+    };
 
+    const loginHandler = (email: string, password: string): boolean => {
         axios.post(`${endpoint}/api/v1/login`, {
             email, password
         }).then(response => {
             console.log(response);
             if (response.status === 200) {
                 const userData = JSON.parse(response.data);
-
-                setAuthenticated(true);
-                setEvent({...event, name: 'MSA'});
-                setUsername(userData);
-
+                setLoggedInDetails(userData.username);
                 enablePrivateSocket();
                 return true;
             }
         }).catch(error => {
-            if (error.response.status === 401) {
+            if (error.response && error.response.status === 401) {
                 addNotificationsHandler(error.response.data.msg, NoticeLevel.Bad);
             } else {
                 addNotificationsHandler(error.toString(), NoticeLevel.Bad);
@@ -128,8 +129,9 @@ const App: React.FC = () => {
                     event: event,
                     authenticated: isAuthenticated,
                     userName: userName,
-                    login: loginHandler,
-                    logout: logoutHandler,
+                    setLoggedInDetails: setLoggedInDetails,
+                    loginRequest: loginHandler,
+                    logoutRequest: logoutHandler,
                     endpoint: endpoint,
                     notifications: notifications,
                     addNotifications: addNotificationsHandler

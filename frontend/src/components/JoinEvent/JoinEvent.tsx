@@ -27,7 +27,7 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = () => {
                 <Container className="pt-5 pl-md-5 pr-md-5 pb-md-2">
                     <Row>
                         <Col>
-                            <div className={classes.fontTitle}>JoinEvent</div>
+                            <div className={classes.fontTitle}>Let's Join Everyone</div>
                         </Col>
                     </Row>
                     <Row className="mt-3 mt-lg-5 justify-content-md-center">
@@ -41,7 +41,7 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = () => {
 
                                 <Accordion.Collapse eventKey="login">
                                     <Card.Body>
-                                        <LoginForm loginHandler={appContext.login}/>
+                                        <LoginForm loginHandler={appContext.loginRequest}/>
                                     </Card.Body>
                                 </Accordion.Collapse>
                             </Card>
@@ -63,7 +63,7 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = () => {
 
                                 <Accordion.Collapse eventKey="signUp">
                                     <Card.Body>
-                                        <SignUpForm signUpHandler={appContext.login}/>
+                                        <SignUpForm signUpHandler={appContext.loginRequest}/>
                                     </Card.Body>
                                 </Accordion.Collapse>
                             </Card>
@@ -72,7 +72,7 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = () => {
                     <Row className="mt-3 justify-content-md-center">
                         <Col {...colConfig}>
                             <Button variant="primary" className="w-100"
-                                    onClick={() => appContext.login('PublicTestUser', '20191234')}>
+                                    onClick={() => appContext.loginRequest('PublicTestUser', '20191234')}>
                                 !Dev skip login!
                             </Button>
                         </Col>
