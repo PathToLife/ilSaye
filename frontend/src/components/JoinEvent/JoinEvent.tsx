@@ -46,11 +46,6 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = (props) => {
                         <div className={classes.fontTitle}>JoinEvent</div>
                     </Col>
                 </Row>
-                <Row className="mt-3 justify-content-md-center">
-                    <Col {...colConfig}>
-
-                    </Col>
-                </Row>
                 <Row className="mt-3 mt-lg-5 justify-content-md-center">
                     <Col {...colConfig}>
                         <Accordion className="m-auto w-100">
