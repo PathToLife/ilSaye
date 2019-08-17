@@ -88,6 +88,30 @@ paths:
       tags:
         - auth
       summary: signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type:
+                object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: ok
+        400:
+          descritption: failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+
+
+
   /logout:
     get:
       tags:
@@ -162,7 +186,7 @@ components:
           type: string
           nullable: true
           description: last joined event name
-    errorObject:
+    errorResponse:
       title: Error Response
       type: object
       properties:
