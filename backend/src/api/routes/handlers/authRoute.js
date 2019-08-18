@@ -1,26 +1,27 @@
 const express = require('express');
-const {sendNotImplemented, sendError} = require('../builders/error');
+const {sendNotImplemented, sendError} = require('../helpers/error');
 const {validateToken} = require('../../oauth/googleauth');
-const {sendAuthUser} = require('../builders/authOk');
+const {sendAndSignAuthUser, HashPassword, ValidatePassword, ValidateJWT} = require('../helpers/authenticate');
+const jwt = require('jsonwebtoken');
 const randName = require('../../../client/generateName');
 const UserDB = require('../../../db/models/model_user');
 
-// to save time we don't use randomly generated per-user salt
-const SERVER_SALT = 'dwa879312noodle88912';
-
-const crypto = require('crypto');
 const router = express.Router();
 
-const HashPassword = (pass) => {
-    return crypto.createHash('sha1').update(pass).digest('hex') + SERVER_SALT
-};
-
-const ValidatePassword = (pass, hash) => {
-    return HashPassword(pass) === hash
-};
-
+router.get('/auth', (req, res) => {
+    if(req.query.token) {
+        const decoded = ValidateJWT(req.query.token);
+        if (decoded.email) {
+            res.status(200);
+            res.send(JSON.stringify(decoded));
+            return;
+        }
+    }
+    sendError(res, 401, 'not authed');
+});
 router.get('/logout', (req, res) => {
-    sendNotImplemented(res);
+
+    res.send({msg:'loggedOut'});
 });
 router.post('/login', (req, res) => {
     try {
@@ -38,7 +39,7 @@ router.post('/login', (req, res) => {
                 }
 
                 if (ValidatePassword(reqData.password, userObj.password_hash)) {
-                    sendAuthUser(res, userObj.username, userObj.email, userObj.email);
+                    sendAndSignAuthUser(res, userObj.username, userObj.email, userObj.email);
                 } else {
                     sendError(res, 401, 'Email or password wrong');
                 }
@@ -64,7 +65,7 @@ router.post('/logingoogle', async (req, res) => {
                         }
                     }).then(userObj => {
                             if (userObj !== null && userObj.email) {
-                                sendAuthUser(res, userObj.username, userObj.email, userObj.email);
+                                sendAndSignAuthUser(res, userObj.username, userObj.email, userObj.email);
                             } else {
                                 // user not found
                                 // Create User with random username
@@ -74,7 +75,7 @@ router.post('/logingoogle', async (req, res) => {
                                     password: null,
                                     google: "yes"
                                 }).then(userObj => {
-                                    sendAuthUser(res, userObj.username, userObj.email, userObj.email);
+                                    sendAndSignAuthUser(res, userObj.username, userObj.email, userObj.email);
                                 }).catch(e => sendError(res, 503, e));
                             }
                         }

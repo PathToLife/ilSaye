@@ -30,14 +30,14 @@ const ChatPanel: React.FC = () => {
         const elems: any = [];
         let lastUsername:string = '';
         let alignLeft = true;
-        messageStore.forEach(message => {
+        messageStore.forEach((message, index) => {
             if (message.user !== lastUsername) {
                 lastUsername = message.user;
                 alignLeft = !alignLeft;
             }
             const msg = makeMessage(message.user, message.text, message.img, alignLeft);
             elems.push((
-                <Row>
+                <Row key={index}>
                     <Col>{alignLeft ? msg : null}</Col><Col>{alignLeft ? null : msg}</Col>
                 </Row>
             ));

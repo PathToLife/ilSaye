@@ -7,7 +7,7 @@ interface defaultContextType {
     authenticated: boolean,
     event: {name: string, id:string},
     userName: string,
-    setLoggedInDetails: (username:string, eventName?:string) => void,
+    setLoggedInDetails: (username:string, jwt?:string, eventName?:string) => void,
     loginRequest: (username:string, password:string) => any,
     logoutRequest: () => any,
     endpoint: string,
@@ -22,7 +22,7 @@ export const defaultContext: defaultContextType = {
         id: ''
     },
     userName: '',
-    setLoggedInDetails: (username:string, eventName?:string) => {},
+    setLoggedInDetails: (username:string,  jwt?: string, eventName?:string) => {},
     loginRequest: (userName:string, password:string) => {},
     logoutRequest: () => {},
     endpoint: '',

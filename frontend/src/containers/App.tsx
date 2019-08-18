@@ -17,6 +17,7 @@ import socketIOClient from "socket.io-client";
 import socketsStore from "../sockets/socketStore";
 import {NoticeType} from "../components/Notifications/Notice";
 import axios from "axios";
+import {useCookies} from "react-cookie";
 
 /**
  * Main Component for the app
@@ -31,6 +32,7 @@ const App: React.FC = () => {
     const [userName, setUsername] = useState('');
     const [event, setEvent] = useState(defaultContext.event);
     const [notifications, setNotifications] = useState([] as NoticeType[]);
+    const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
 
     const setNotificationsHandler = (notifications: NoticeType[]) => {
         SetLocalData('notifications', JSON.stringify(notifications));
@@ -66,11 +68,26 @@ const App: React.FC = () => {
 
         enablePublicSocket();
 
+        if (cookies['jwt']) {
+            axios.get(`${endpoint}/api/v1/auth?token=${cookies['jwt']}`, {
+                validateStatus: status => status < 500
+            }).then(response => {
+                if (response.status === 200) {
+                    console.log(`Valid Cookie ${JSON.stringify(response.data)}`);
+                    setLoggedInDetails(response.data.username);
+                } else if (response.status === 401) {
+                    console.log(`Invalid Cookie ${JSON.stringify(response.data)}`);
+                    removeCookie('jwt');
+                }
+            });
+        }
+
         // Get old notifications
         const localNotices = GetLocalData('notifications');
         if (localNotices != null) setNotifications(JSON.parse(localNotices));
         if (localNotices === null) setNotifications(defaultContext.notifications);
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [endpoint]);
 
     const messageHandler = (data: string) => {
@@ -83,10 +100,11 @@ const App: React.FC = () => {
         setNotificationsHandler(noticesCopy);
     };
 
-    const setLoggedInDetails = (username: string, eventName:string = 'MSA') => {
+    const setLoggedInDetails = (username: string, jwt?:string, eventName:string = 'MSA') => {
         setAuthenticated(true);
         setEvent({...event, name: eventName});
         setUsername(username);
+        if (jwt) setCookie('jwt', jwt, {maxAge: 3600});
         setNotificationsHandler([]);
     };
 
@@ -96,8 +114,7 @@ const App: React.FC = () => {
         }).then(response => {
             console.log(response);
             if (response.status === 200) {
-                const userData = JSON.parse(response.data);
-                setLoggedInDetails(userData.username);
+                setLoggedInDetails(response.data.username, response.data.jwt);
                 enablePrivateSocket();
                 return true;
             }
@@ -107,17 +124,20 @@ const App: React.FC = () => {
             } else {
                 addNotificationsHandler(error.toString(), NoticeLevel.Bad);
             }
-
             return false
         });
-
         return true
     };
 
     const logoutHandler = () => {
+        axios.get(`${endpoint}/api/v1/logout`)
+            .then(() =>{})
+            .catch( error => addNotificationsHandler(error.toString(), NoticeLevel.Bad));
+
         setAuthenticated(false);
         setEvent(defaultContext.event);
         setUsername('');
+        removeCookie('jwt');
         disablePrivateSocket();
         return true;
     };
