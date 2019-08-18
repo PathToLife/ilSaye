@@ -2,7 +2,7 @@ const express = require('express');
 const {sendNotImplemented, sendError} = require('../helpers/error');
 const {validateToken} = require('../../oauth/googleauth');
 const {sendAndSignAuthUser, HashPassword, ValidatePassword, ValidateJWT} = require('../helpers/authenticate');
-const jwt = require('jsonwebtoken');
+const {getUserByUsername,getUserByEmail} = require('../../../client/user');
 const randName = require('../../../client/generateName');
 const UserDB = require('../../../db/models/model_user');
 
@@ -20,7 +20,6 @@ router.get('/auth', (req, res) => {
     sendError(res, 401, 'not authed');
 });
 router.get('/logout', (req, res) => {
-
     res.send({msg:'loggedOut'});
 });
 router.post('/login', (req, res) => {
@@ -95,16 +94,32 @@ router.post('/loginfacebook', (req, res) => {
     sendNotImplemented(res);
 });
 
-router.post('/signup', (req, res) => {
+router.post('/signup', async (req, res) => {
     try {
         const data = req.body;
 
         if (!data.email || !data.password) {
-            sendError(res, 400, 'usr or pass not included');
+            sendError(res, 400, 'Please provide email and password');
             return;
         }
         if (data.password.length < 4 || data.email.length < 4) {
-            sendError(res, 400, 'usr or pass too short');
+            sendError(res, 400, 'Please provide longer password');
+            return;
+        }
+
+        const user = await getUserByEmail(data.email);
+
+        if (user !== null) {
+            if (user.password_hash === null) {
+                user.password_hash = HashPassword(data.password);
+                user.save().then(
+                    (userObj) => {
+                        res.send(JSON.stringify(userObj, null, 2));
+                    }
+                );
+                return;
+            }
+            sendError(res, 400, 'This email already exists');
             return;
         }
 
