@@ -8,7 +8,9 @@ class EventUser {
     }
 
     sendMessage(username, message) {
-        this.socket.emit('onmessage', {username, message})
+        setTimeout (() => {
+            this.socket.emit('receiveMessage', {username, message})
+        })
     }
 }
 
@@ -18,17 +20,20 @@ class Event {
         this.eventUsers = new Map();
     }
 
-    sendMessage(user, message) {
-        if (this.eventUsers.has(user.username)) {
-            this.eventUsers.forEach((_, eventUser) => {
-                eventUser.sendMessage(user.username, message)
-            })
+    sendMessage(username, message) {
+        if (this.eventUsers.has(username)) {
+            this.eventUsers.forEach((eventUser, username) => {
+                console.log(`Sending msg to ${eventUser.username} ${message}`);
+                eventUser.sendMessage(username, message)
+            });
+            return true
         }
+        return false;
     }
 
-    addUser(user) {
-        if (!this.eventUsers.has(user.username)) {
-            this.eventUsers.set(user.username, user);
+    addUser(eventUser) {
+        if (!this.eventUsers.has(eventUser.username)) {
+            this.eventUsers.set(eventUser.username, eventUser);
         }
         return true;
     }
@@ -46,6 +51,7 @@ class EventManager {
 
     constructor() {
         this.events = new Map();
+        this.socketToUser = new Map();
     }
 
     createEvent(eventName) {
@@ -59,21 +65,36 @@ class EventManager {
     // Join Event
     joinEvent(eventName, username, socket) {
         if (this.events.has(eventName)) {
-            const user = new EventUser(username, eventName, socket);
+            const eventUser = new EventUser(username, eventName, socket);
             const event = this.events.get(eventName);
-            return event.addUser(user);
+            this.socketToUser.set(socket, eventUser);
+            console.log(`User Joined Event ${eventName} ${eventUser.username}`);
+            return event.addUser(eventUser);
         }
         return false;
     }
 
+    userLeft(socket) {
+        if (this.socketToUser.has(socket)) {
+            const eventUser = this.socketToUser.get(socket);
+            const eventName = eventUser.eventName;
+            this.leaveEvent(eventName, eventUser);
+            console.log(`User Left Event ${eventName} ${eventUser.username}`);
+        }
+    }
+
     // Leave Event
     leaveEvent(eventName, user) {
-        this.events.get(eventName).removeUser(user);
+        if (this.events.has(eventName)) {
+            this.events.get(eventName).removeUser(user);
+        }
     }
 
     // Send Message
-    sendMessage(eventName, user, message) {
-        this.events.get(eventName).sendMessage(user, message);
+    sendMessage(eventName, username, message) {
+        if (this.events.has(eventName)) {
+            return this.events.get(eventName).sendMessage(username, message);
+        }
     }
 
     // Retrieve Messages

@@ -7,6 +7,8 @@ const {ValidateJWT} = require('../../client/authenticate');
 const publicCM = new socketCounter();
 const eventManger = new EventManager();
 
+eventManger.createEvent('123');
+
 const AttachSockets = (httpServer) => {
     const io = socketIO(httpServer, {
         path: '/socket', // internal TCP path of socket, not to be confused with http path
@@ -42,33 +44,34 @@ const AttachSockets = (httpServer) => {
 
         console.log(`Private Client Joined ${socket.handshake.address}}`);
 
-        socket.on("createEvent", ({jwt, eventName}) => {
+        socket.on("createEvent", ({jwt, eventName}, res) => {
             const data = ValidateJWT(jwt);
             if (data) {
-                socket.emit("createEvent", eventManger.createEvent(eventName));
+                res(eventManger.createEvent(eventName));
             }
         });
 
-        socket.on("joinEvent", ({jwt, eventName}) => {
+        socket.on("joinEvent", ({jwt, eventName}, res) => {
             if (!jwt || !eventName || eventName.length === 0) {
-                socket.emit("joinEvent", false);
+                res(false);
                 return;
             }
             const data = ValidateJWT(jwt);
             if (data) {
                 const joinResult = eventManger.joinEvent(eventName, data.username, socket);
-                socket.emit("joinEvent", joinResult);
+                res(joinResult);
             }
         });
 
-        socket.on("sendmessage", ({jwt, eventName, message}) => {
+        socket.on("sendMessage", ({jwt, eventName, message}, res) => {
             const data = ValidateJWT(jwt);
             if (data) {
-                eventManger.sendMessage(eventName, data.username, message)
+                res(eventManger.sendMessage(eventName, data.username, message));
             }
         });
 
         socket.on("disconnect", () => {
+            eventManger.userLeft(socket);
             console.log(`Private Client disconnected`);
         });
     })

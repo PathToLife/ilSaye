@@ -49,7 +49,7 @@ const MainNav: React.FC = () => {
                         height="30px"
                         className="d-inline-block align-top mr-md-3 mr-1"
                     />
-                    {appContext.event.name ? appContext.event.name : 'ilSaye'}
+                    {appContext.eventName ? appContext.eventName : 'ilSaye'}
                 </Navbar.Brand>
             </NavLink>
             {r_nav !== null ? <Navbar.Toggle aria-controls="basic-navbar-nav"/> : null}

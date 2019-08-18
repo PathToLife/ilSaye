@@ -5,8 +5,9 @@ export {NoticeLevel} from "../components/Notifications/Notice"; // Re-export her
 
 interface defaultContextType {
     authenticated: boolean,
-    event: {name: string, id:string},
+    eventName: string | null,
     userName: string,
+    setEventName: (eventName: string | null) => void;
     setLoggedInDetails: (username:string, jwt?:string, eventName?:string) => void,
     loginRequest: (username:string, password:string) => any,
     logoutRequest: () => any,
@@ -17,10 +18,8 @@ interface defaultContextType {
 
 export const defaultContext: defaultContextType = {
     authenticated: false,
-    event: {
-        name: '',
-        id: ''
-    },
+    eventName: null,
+    setEventName: (eventName: string | null) => {},
     userName: '',
     setLoggedInDetails: (username:string,  jwt?: string, eventName?:string) => {},
     loginRequest: (userName:string, password:string) => {},
