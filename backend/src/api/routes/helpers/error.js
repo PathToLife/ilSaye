@@ -19,6 +19,7 @@ const jsonError = (errorCode, msg) => {
 };
 
 const sendError = (res, code, message) => {
+    console.log(message);
     res.status(code);
     res.send(jsonError(code, message));
 };

@@ -178,6 +178,9 @@ components:
       title: Authenticated user response
       type: object
       properties:
+        jwt:
+          type: string
+          description: jsonwebtoken to use for authenticated endpoints
         username:
           type: string
         email:

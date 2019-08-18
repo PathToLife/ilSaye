@@ -1,5 +1,5 @@
 const express = require('express');
-const {sendNotImplemented} = require('../builders/error');
+const {sendNotImplemented} = require('../helpers/error');
 
 const router = express.Router();
 

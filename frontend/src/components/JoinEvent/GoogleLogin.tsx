@@ -13,7 +13,7 @@ const GoogleLoginButton: React.FC = () => {
         axios.post(`${appContext.endpoint}/api/v1/logingoogle?token=${res.accessToken}`)
             .then(res => {
                 if (res.status === 200) {
-                    appContext.setLoggedInDetails(res.data.username);
+                    appContext.setLoggedInDetails(res.data.username, res.data.jwt);
                 }
             })
             .catch(e => console.log(e));
