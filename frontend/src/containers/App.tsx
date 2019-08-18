@@ -7,7 +7,7 @@ import classes from './App.module.css';
 import ScreenSaver from "../components/ScreenSaver/ScreenSaver";
 import MainPanel from "../components/MainPanel/MainPanel";
 import MainNav from "../components/Navigation/MainNav";
-import JoinEventPanel from "../components/JoinEvent/JoinEvent";
+import SignInSignUp from "../components/LoginSignUp/SignInSignUp";
 import Notices from "../components/Notifications/Notices";
 // Context
 import AppContext, {defaultContext, NoticeLevel} from '../context/AppContext';
@@ -106,6 +106,7 @@ const App: React.FC = () => {
         setUsername(username);
         if (jwt) setCookie('jwt', jwt, {maxAge: 3600});
         setNotificationsHandler([]);
+        enablePrivateSocket();
     };
 
     const loginHandler = (email: string, password: string): boolean => {
@@ -115,7 +116,6 @@ const App: React.FC = () => {
             console.log(response);
             if (response.status === 200) {
                 setLoggedInDetails(response.data.username, response.data.jwt);
-                enablePrivateSocket();
                 return true;
             }
         }).catch(error => {
@@ -163,8 +163,8 @@ const App: React.FC = () => {
                     <Notices setNotificationsHandler={setNotificationsHandler}/>
                     <Switch>
                         <Route exact path="/" component={() => <ScreenSaver usersOnline={usersOnline}/>}/>
-                        <Route path="/dashboard" component={() => <MainPanel/>}/>
-                        <Route path="/join" component={() => <JoinEventPanel/>}/>
+                        <Route path="/dashboard" component={() => <MainPanel privateSocket={socketsStore.private}/>}/>
+                        <Route path="/join" component={() => <SignInSignUp/>}/>
                         <Route component={() => <div>Not Found</div>}/>
                     </Switch>
                 </div>

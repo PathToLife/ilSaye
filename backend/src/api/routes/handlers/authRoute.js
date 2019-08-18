@@ -1,7 +1,7 @@
 const express = require('express');
 const {sendNotImplemented, sendError} = require('../helpers/error');
 const {validateToken} = require('../../oauth/googleauth');
-const {sendAndSignAuthUser, HashPassword, ValidatePassword, ValidateJWT} = require('../helpers/authenticate');
+const {sendAndSignAuthUser, HashPassword, ValidatePassword, ValidateJWT} = require('../../../client/authenticate');
 const {getUserByUsername,getUserByEmail} = require('../../../client/user');
 const randName = require('../../../client/generateName');
 const UserDB = require('../../../db/models/model_user');
