@@ -7,7 +7,7 @@ import classes from './App.module.css';
 import ScreenSaver from "../components/ScreenSaver/ScreenSaver";
 import MainPanel from "../components/MainPanel/MainPanel";
 import MainNav from "../components/Navigation/MainNav";
-import JoinEventPanel from "../components/JoinEvent/JoinEvent";
+import SignInSignUp from "../components/LoginSignUp/SignInSignUp";
 import Notices from "../components/Notifications/Notices";
 // Context
 import AppContext, {defaultContext, NoticeLevel} from '../context/AppContext';
@@ -30,7 +30,7 @@ const App: React.FC = () => {
     const [usersOnline, setUsersOnline] = useState(0);
     const [isAuthenticated, setAuthenticated] = useState(false);
     const [userName, setUsername] = useState('');
-    const [event, setEvent] = useState(defaultContext.event);
+    const [eventName, setEventName] = useState(defaultContext.eventName);
     const [notifications, setNotifications] = useState([] as NoticeType[]);
     const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
 
@@ -102,10 +102,11 @@ const App: React.FC = () => {
 
     const setLoggedInDetails = (username: string, jwt?:string, eventName:string = 'MSA') => {
         setAuthenticated(true);
-        setEvent({...event, name: eventName});
+        setEventName(eventName);
         setUsername(username);
         if (jwt) setCookie('jwt', jwt, {maxAge: 3600});
         setNotificationsHandler([]);
+        enablePrivateSocket();
     };
 
     const loginHandler = (email: string, password: string): boolean => {
@@ -115,7 +116,6 @@ const App: React.FC = () => {
             console.log(response);
             if (response.status === 200) {
                 setLoggedInDetails(response.data.username, response.data.jwt);
-                enablePrivateSocket();
                 return true;
             }
         }).catch(error => {
@@ -135,7 +135,7 @@ const App: React.FC = () => {
             .catch( error => addNotificationsHandler(error.toString(), NoticeLevel.Bad));
 
         setAuthenticated(false);
-        setEvent(defaultContext.event);
+        setEventName(defaultContext.eventName);
         setUsername('');
         removeCookie('jwt');
         disablePrivateSocket();
@@ -147,9 +147,10 @@ const App: React.FC = () => {
             <AppContext.Provider
                 value={{
                     ...defaultContext,
-                    event: event,
                     authenticated: isAuthenticated,
                     userName: userName,
+                    eventName: eventName,
+                    setEventName: (eventName) => setEventName(eventName),
                     setLoggedInDetails: setLoggedInDetails,
                     loginRequest: loginHandler,
                     logoutRequest: logoutHandler,
@@ -163,8 +164,8 @@ const App: React.FC = () => {
                     <Notices setNotificationsHandler={setNotificationsHandler}/>
                     <Switch>
                         <Route exact path="/" component={() => <ScreenSaver usersOnline={usersOnline}/>}/>
-                        <Route path="/dashboard" component={() => <MainPanel/>}/>
-                        <Route path="/join" component={() => <JoinEventPanel/>}/>
+                        <Route path="/dashboard" component={() => <MainPanel privateSocket={socketsStore.private}/>}/>
+                        <Route path="/join" component={() => <SignInSignUp/>}/>
                         <Route component={() => <div>Not Found</div>}/>
                     </Switch>
                 </div>

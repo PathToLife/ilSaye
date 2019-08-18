@@ -1,23 +1,92 @@
-import React from "react";
-import {Container, Row, Col} from 'react-bootstrap';
+import React, {useContext, useEffect} from "react";
+import {Col, Container, Row} from 'react-bootstrap';
 import ChatPanel from "../Chat/ChatPanel";
 import {Redirect} from "react-router";
-import AppContext from "../../context/AppContext";
+import AppContext, {NoticeLevel} from "../../context/AppContext";
+import {useCookies} from "react-cookie";
+import JoinEvent from "../JoinEvent/JoinEvent";
+import CreateEvent from "../JoinEvent/CreateEvent";
+import SendMessage from "../Chat/SendMessage";
 
-const MainPanel: React.FC = () => {
+type TMainPanel = {
+    privateSocket: SocketIOClient.Socket | null
+}
 
-    const authContext = React.useContext(AppContext);
-    if (!authContext.authenticated) return <Redirect to='/join'/>;
+const MainPanel: React.FC<TMainPanel> = ({privateSocket}) => {
+    const appContext = useContext(AppContext);
+    const [cookies] = useCookies(['jwt']);
+
+    useEffect(() => {
+        if (privateSocket !== null) {
+            privateSocket.on('receiveMessage', (data: {username: string, message:string}) => {
+                const {username, message} = data;
+                appContext.addNotifications(`${username} ${message}`, NoticeLevel.Neutral);
+            })
+        }
+        return () => {
+            if (privateSocket !== null) {
+                privateSocket.off('receiveMessage');
+            }
+        }
+    });
+
+    if (!appContext.authenticated) return <Redirect to='/join'/>;
+
+    const jwt = cookies['jwt'];
+
+    const joinEvent = (eventName: string) => {
+        if (privateSocket === null) return appContext.addNotifications(`Failed to Join, Socket Null`, NoticeLevel.Bad);
+        privateSocket.emit("joinEvent", {jwt, eventName}, (response: boolean | string) => {
+            if (response === true) {
+                appContext.addNotifications(`Joined ${eventName}`, NoticeLevel.Good);
+                appContext.setEventName(eventName);
+            } else {
+                appContext.addNotifications(`Failed to Join ${eventName} ${response === false ? '' : response}`, NoticeLevel.Warning)
+            }
+        });
+    };
+
+    const createEvent = (eventName: string) => {
+        if (privateSocket === null) return appContext.addNotifications(`Failed to Join, Socket Null`, NoticeLevel.Bad);
+        privateSocket.emit("createEvent", {jwt, eventName}, (response: string | boolean) => {
+            if (response === true) {
+                appContext.addNotifications(`Created ${eventName}`, NoticeLevel.Good)
+            } else {
+                appContext.addNotifications(`Failed to Create ${eventName} ${response === false ? '' : response}`, NoticeLevel.Warning)
+            }
+        });
+    };
+
+    const sendMessage = (message: string) => {
+        if (privateSocket === null) return appContext.addNotifications(`Failed to Join, Socket Null`, NoticeLevel.Bad);
+        privateSocket.emit("sendMessage", {
+            jwt,
+            eventName: appContext.eventName,
+            message
+        }, (response: string | boolean) => {
+            if (response === true) {
+                appContext.addNotifications(`Sent ${appContext.eventName}`, NoticeLevel.Good)
+            } else {
+                appContext.addNotifications(`Failed To Send msg ${response === false ? '' : response}`, NoticeLevel.Warning)
+            }
+        });
+    };
 
     return (
         <Container>
             <Row>
-                <ChatPanel/>
+                <ChatPanel privateSocket={privateSocket}/>
             </Row>
-            <Row>
-                <Col>1 of 3</Col>
-                <Col>2 of 3</Col>
-                <Col>3 of 3</Col>
+            <Row className="m-3">
+                <Col md={4}>
+                    <JoinEvent joinEvent={joinEvent}/>
+                </Col>
+                <Col md={4}>
+                    <SendMessage sendMessage={sendMessage}/>
+                </Col>
+                <Col md={4}>
+                    <CreateEvent createEvent={createEvent}/>
+                </Col>
             </Row>
         </Container>
     );

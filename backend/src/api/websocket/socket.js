@@ -1,9 +1,13 @@
 const socketIO = require('socket.io');
 const {notifyOnline} = require('./online');
 const socketCounter = require('./socketCounterManager');
-const cookie = require('cookie');
+const {EventManager, EventUser} = require('./EventManager');
+const {ValidateJWT} = require('../../client/authenticate');
 
 const publicCM = new socketCounter();
+const eventManger = new EventManager();
+
+eventManger.createEvent('123');
 
 const AttachSockets = (httpServer) => {
     const io = socketIO(httpServer, {
@@ -29,10 +33,6 @@ const AttachSockets = (httpServer) => {
         console.log(`New client ${client.id} connected. ${publicCM.getNumberOnline()} online`);
         publicCM.updateClients();
 
-        socket.on("joinEvent", (data) => {
-                console.log(data.code);
-            });
-
         socket.on("disconnect", () => {
             console.log(`Client disconnected ${client.id}`);
             publicCM.removeClient(client);
@@ -41,9 +41,37 @@ const AttachSockets = (httpServer) => {
     });
 
     io.of('/privateapi').on("connection", socket => {
-        const cookies = cookie.parse(socket.handshake.headers.cookie);
-        console.log(`Private Client Joined ${socket.handshake.address} ${JSON.stringify(cookies, null, 2)}`);
+
+        console.log(`Private Client Joined ${socket.handshake.address}}`);
+
+        socket.on("createEvent", ({jwt, eventName}, res) => {
+            const data = ValidateJWT(jwt);
+            if (data) {
+                res(eventManger.createEvent(eventName));
+            }
+        });
+
+        socket.on("joinEvent", ({jwt, eventName}, res) => {
+            if (!jwt || !eventName || eventName.length === 0) {
+                res(false);
+                return;
+            }
+            const data = ValidateJWT(jwt);
+            if (data) {
+                const joinResult = eventManger.joinEvent(eventName, data.username, socket);
+                res(joinResult);
+            }
+        });
+
+        socket.on("sendMessage", ({jwt, eventName, message}, res) => {
+            const data = ValidateJWT(jwt);
+            if (data) {
+                res(eventManger.sendMessage(eventName, data.username, message));
+            }
+        });
+
         socket.on("disconnect", () => {
+            eventManger.userLeft(socket);
             console.log(`Private Client disconnected`);
         });
     })

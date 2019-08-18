@@ -13,7 +13,11 @@ const test_messages = [
     {user: 'bob5', text: 'djwioajo jiowa jijowa', img: null},
 ];
 
-const ChatPanel: React.FC = () => {
+type TChatPanel = {
+    privateSocket: SocketIOClient.Socket | null
+}
+
+const ChatPanel: React.FC<TChatPanel> = ({privateSocket}) => {
 
     const [messageStore, setMessageStore] = useState(test_messages);
 

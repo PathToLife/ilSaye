@@ -4,14 +4,14 @@ import Button from "react-bootstrap/Button";
 import {Formik} from "formik";
 import React from "react";
 
-type TJoinEvent = {
-    joinEvent: any
+type TCreateEvent = {
+    createEvent: any
 }
 
-const JoinEvent:React.FC<TJoinEvent> = ({joinEvent}) => {
+const CreateEvent:React.FC<TCreateEvent> = ({createEvent}) => {
     return (
         <Formik
-            onSubmit={(values) => joinEvent(values.eventName)}
+            onSubmit={(values) => createEvent(values.eventName)}
             initialValues={{
                 eventName: ""
             }}
@@ -28,17 +28,15 @@ const JoinEvent:React.FC<TJoinEvent> = ({joinEvent}) => {
                 <InputGroup className="mb-3">
                     <FormControl
                         placeholder="EventName"
-                        aria-label="EventName"
-                        aria-describedby="eventNameInput"
                         name="eventName"
                         onChange={handleChange}
                         value={values.eventName}
                     />
-                    <Button type="submit" onClick={() => handleSubmit()}>Join</Button>
+                    <Button type="submit" onClick={() => handleSubmit()}>Create</Button>
                 </InputGroup>
             )}
         </Formik>
     )
 };
 
-export default JoinEvent;
+export default CreateEvent;
