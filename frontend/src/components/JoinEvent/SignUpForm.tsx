@@ -1,10 +1,12 @@
-import React from "react";
+import React, {useContext} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import {InputGroup} from "react-bootstrap";
 import {Formik} from "formik";
 import * as yup from "yup";
 import Col from "react-bootstrap/Col";
+import AppContext from "../../context/AppContext";
+import axios from "axios";
 
 type signUpForm = {
     signUpHandler: (user: string, pass: string) => any
@@ -22,11 +24,25 @@ const schema = yup.object({
 });
 
 const SignUpForm: React.FC<signUpForm> = ({signUpHandler}) => {
+    const appContext = useContext(AppContext);
+
+    const handleSignUp = (email:string, password:string) => {
+      axios.post(
+          `${appContext.endpoint}/api/v1/signup`,
+          JSON.stringify({email, password}),
+          {
+              headers: { 'content-type': 'application/json' }
+          }
+      )
+          .then(response => {
+              appContext.loginRequest(email, password);
+          })
+    };
 
     return (
         <Formik
             validationSchema={schema}
-            onSubmit={(values) => console.log(values)}
+            onSubmit={(values) => handleSignUp(values.email, values.password)}
             initialValues={{
                 firstName: "",
                 email: "",
@@ -48,7 +64,7 @@ const SignUpForm: React.FC<signUpForm> = ({signUpHandler}) => {
                 <Form noValidate onSubmit={handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col} md="6" controlId="signUpForm01">
-                            <Form.Label>First name</Form.Label>
+                            <Form.Label column={false}>First name</Form.Label>
                             <Form.Control
                                 type="text"
                                 name="firstName"
@@ -62,7 +78,7 @@ const SignUpForm: React.FC<signUpForm> = ({signUpHandler}) => {
                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group as={Col} md="6" controlId="signUpForm02">
-                            <Form.Label>Last name</Form.Label>
+                            <Form.Label column={false}>Last name</Form.Label>
                             <Form.Control
                                 type="text"
                                 name="lastName"

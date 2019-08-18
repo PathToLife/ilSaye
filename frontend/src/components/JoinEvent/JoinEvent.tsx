@@ -69,14 +69,6 @@ const JoinEventPanel: React.FC<joinEventPanelTypes> = () => {
                             </Card>
                         </Col>
                     </Row>
-                    <Row className="mt-3 justify-content-md-center">
-                        <Col {...colConfig}>
-                            <Button variant="primary" className="w-100"
-                                    onClick={() => appContext.loginRequest('PublicTestUser', '20191234')}>
-                                !Dev skip login!
-                            </Button>
-                        </Col>
-                    </Row>
                 </Container>
             </Accordion>
         </div>

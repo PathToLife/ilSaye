@@ -2,13 +2,11 @@ const modelUser = require('../db/models/model_user');
 
 const query = (query) => {
     return new Promise((resolve, reject) => {
-        modelUser.findOne({
-            where: {username: username}
-        }).then(data => {
-            if (data === null) {
+        modelUser.findOne(query).then(user => {
+            if (user === null) {
                 resolve(null)
             } else {
-                resolve(data)
+                resolve(user);
             }
         }).catch(e => {
             reject(e)
