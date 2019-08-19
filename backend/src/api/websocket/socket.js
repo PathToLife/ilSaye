@@ -1,19 +1,17 @@
 const socketIO = require('socket.io');
 const {notifyOnline} = require('./online');
 const socketCounter = require('./socketCounterManager');
-const {EventManager, EventUser} = require('./EventManager');
 const {ValidateJWT} = require('../../client/authenticate');
-
-const publicCM = new socketCounter();
-const eventManger = new EventManager();
-
-eventManger.createEvent('123');
 
 const AttachSockets = (httpServer) => {
     const io = socketIO(httpServer, {
         path: '/socket', // internal TCP path of socket, not to be confused with http path
         transports: ['websocket']
     });
+
+    const publicCM = new socketCounter();
+
+    // eventManger.createEvent('123');
 
     // Event Routing
     // User Routing
@@ -28,50 +26,69 @@ const AttachSockets = (httpServer) => {
     publicCM.addUpdateSubscriber((socket) => notifyOnline(socket, publicCM.getNumberOnline()));
 
     // http://base.com/public/api -> TCP /socket route
-    io.of('/publicapi').on("connection", socket => {
-        const client = publicCM.addClient(socket);
+    io.of('/publicapi').on("connection", publicSocketRoute => {
+        const client = publicCM.addClient(publicSocketRoute);
         console.log(`New client ${client.id} connected. ${publicCM.getNumberOnline()} online`);
         publicCM.updateClients();
 
-        socket.on("disconnect", () => {
+        publicSocketRoute.on("disconnect", () => {
             console.log(`Client disconnected ${client.id}`);
             publicCM.removeClient(client);
             publicCM.updateClients();
         });
     });
 
-    io.of('/privateapi').on("connection", socket => {
+    const events = [];
 
-        console.log(`Private Client Joined ${socket.handshake.address}}`);
+    io.of('/privateapi').on("connection", privateSocketRoute => {
 
-        socket.on("createEvent", ({jwt, eventName}, res) => {
-            const data = ValidateJWT(jwt);
-            if (data) {
-                res(eventManger.createEvent(eventName));
+        console.log(`Private Client Joined ${privateSocketRoute.handshake.address}}`);
+
+        privateSocketRoute.on("createEvent", ({jwt, eventName}, res) => {
+            if (jwt && ValidateJWT(jwt)) {
+                if (!events.includes(eventName)) {
+                    events.push(eventName);
+                    privateSocketRoute.join(eventName);
+                    res(true);
+                    return
+                } else {
+                    res('event already created');
+                }
             }
+            res(false);
         });
 
-        socket.on("joinEvent", ({jwt, eventName}, res) => {
-            if (!jwt || !eventName || eventName.length === 0) {
-                res(false);
-                return;
+        privateSocketRoute.on("joinEvent", ({jwt, eventName}, res) => {
+            if (jwt && ValidateJWT(jwt)) {
+                // const joinResult = eventManger.joinEvent(eventName, data.username, privateSocketRoute.id);
+                if (events.includes(eventName)) {
+                    privateSocketRoute.join(eventName);
+                    res(true);
+                    return
+                } else {
+                    res('event does not exist');
+                }
             }
-            const data = ValidateJWT(jwt);
-            if (data) {
-                const joinResult = eventManger.joinEvent(eventName, data.username, socket);
-                res(joinResult);
-            }
+            res(false);
         });
 
-        socket.on("sendMessage", ({jwt, eventName, message}, res) => {
+        privateSocketRoute.on("sendMessage", ({jwt, eventName, message}, res) => {
             const data = ValidateJWT(jwt);
             if (data) {
-                res(eventManger.sendMessage(eventName, data.username, message));
+                //res(eventManger.sendMessage(eventName, data.username, message));
+                if (privateSocketRoute.in(eventName)) {
+                    io.of('/privateapi').to(eventName).emit('receiveMessage', {username:data.username, message});
+                    res(true);
+                    return
+                } else {
+                    res('event does not exist');
+                    res(false);
+                }
             }
+            res(false);
         });
 
-        socket.on("disconnect", () => {
-            eventManger.userLeft(socket);
+        privateSocketRoute.on("disconnect", () => {
             console.log(`Private Client disconnected`);
         });
     })
