@@ -7,25 +7,22 @@ import {useCookies} from "react-cookie";
 import JoinEvent from "../JoinEvent/JoinEvent";
 import CreateEvent from "../JoinEvent/CreateEvent";
 import SendMessage from "../Chat/SendMessage";
+import socketsStore from "../../sockets/socketStore";
 
-type TMainPanel = {
-    privateSocket: SocketIOClient.Socket | null
-}
-
-const MainPanel: React.FC<TMainPanel> = ({privateSocket}) => {
+const MainPanel: React.FC = () => {
     const appContext = useContext(AppContext);
     const [cookies] = useCookies(['jwt']);
 
     useEffect(() => {
-        if (privateSocket !== null) {
-            privateSocket.on('receiveMessage', (data: {username: string, message:string}) => {
+        if (socketsStore.private !== null) {
+            socketsStore.private.on('receiveMessage', (data: {username: string, message:string}) => {
                 const {username, message} = data;
                 appContext.addNotifications(`${username} ${message}`, NoticeLevel.Neutral);
             })
         }
         return () => {
-            if (privateSocket !== null) {
-                privateSocket.off('receiveMessage');
+            if (socketsStore.private !== null) {
+                socketsStore.private.off('receiveMessage');
             }
         }
     });
@@ -35,8 +32,9 @@ const MainPanel: React.FC<TMainPanel> = ({privateSocket}) => {
     const jwt = cookies['jwt'];
 
     const joinEvent = (eventName: string) => {
-        if (privateSocket === null) return appContext.addNotifications(`Failed to Join, Socket Null`, NoticeLevel.Bad);
-        privateSocket.emit("joinEvent", {jwt, eventName}, (response: boolean | string) => {
+        const ps = socketsStore.private;
+        if (socketsStore.private === null) return appContext.addNotifications(`Failed to Join, Socket Null`, NoticeLevel.Bad);
+        socketsStore.private.emit("joinEvent", {jwt, eventName}, (response: boolean | string) => {
             if (response === true) {
                 appContext.addNotifications(`Joined ${eventName}`, NoticeLevel.Good);
                 appContext.setEventName(eventName);
@@ -47,8 +45,8 @@ const MainPanel: React.FC<TMainPanel> = ({privateSocket}) => {
     };
 
     const createEvent = (eventName: string) => {
-        if (privateSocket === null) return appContext.addNotifications(`Failed to Join, Socket Null`, NoticeLevel.Bad);
-        privateSocket.emit("createEvent", {jwt, eventName}, (response: string | boolean) => {
+        if (socketsStore.private === null) return appContext.addNotifications(`Failed to Join, Socket Null`, NoticeLevel.Bad);
+        socketsStore.private.emit("createEvent", {jwt, eventName}, (response: string | boolean) => {
             if (response === true) {
                 appContext.addNotifications(`Created ${eventName}`, NoticeLevel.Good)
             } else {
@@ -58,8 +56,8 @@ const MainPanel: React.FC<TMainPanel> = ({privateSocket}) => {
     };
 
     const sendMessage = (message: string) => {
-        if (privateSocket === null) return appContext.addNotifications(`Failed to Join, Socket Null`, NoticeLevel.Bad);
-        privateSocket.emit("sendMessage", {
+        if (socketsStore.private === null) return appContext.addNotifications(`Failed to Join, Socket Null`, NoticeLevel.Bad);
+        socketsStore.private.emit("sendMessage", {
             jwt,
             eventName: appContext.eventName,
             message
@@ -75,7 +73,7 @@ const MainPanel: React.FC<TMainPanel> = ({privateSocket}) => {
     return (
         <Container>
             <Row>
-                <ChatPanel privateSocket={privateSocket}/>
+                <ChatPanel privateSocket={socketsStore.private}/>
             </Row>
             <Row className="m-3">
                 <Col md={4}>
