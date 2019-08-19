@@ -20,11 +20,11 @@ class Event {
         this.eventUsers = new Map();
     }
 
-    sendMessage(username, message) {
-        if (this.eventUsers.has(username)) {
-            this.eventUsers.forEach((eventUser, username) => {
+    sendMessage(senderUsername, message) {
+        if (this.eventUsers.has(senderUsername)) {
+            this.eventUsers.forEach((eventUser,) => {
                 console.log(`Sending msg to ${eventUser.username} ${message}`);
-                eventUser.sendMessage(username, message)
+                eventUser.sendMessage(senderUsername, message)
             });
             return true
         }
