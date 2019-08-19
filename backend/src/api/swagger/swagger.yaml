@@ -1,7 +1,7 @@
 openapi: 3.0.0
 
 info:
-  version: 0.8.3
+  version: 0.8.4
   title: ilSaye Backend API
   description: An event communication backend for large audiences written in Nodejs, with express and Sequelize
 
