@@ -2,9 +2,9 @@ const {describe, it, before, after} = require('mocha');
 const expect = require('expect');
 const socketIOClient = require('socket.io-client');
 const http = require('http');
-const auth = require('../../client/authenticate');
+const auth = require('../src/client/authenticate');
 
-const AttachSockets = require('./socket');
+const AttachSockets = require('../src/api/websocket/socket');
 
 /**
  * For working out if the socket.io connection is relaying messages properly.

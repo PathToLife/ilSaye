@@ -6,11 +6,11 @@ const expect = require('expect');
  * it also servers a dual purpose of creating / altering tables for a new db
  */
 
-const db = require('./db.js');
-const modelTest = require('./models/model_test');
-const modelUser = require('./models/model_user');
-const modelEvent = require('./models/model_event');
-const modelMessage = require('./models/model_message');
+const db = require('../src/db/db.js');
+const modelTest = require('../src/db/models/model_test');
+const modelUser = require('../src/db/models/model_user');
+const modelEvent = require('../src/db/models/model_event');
+const modelMessage = require('../src/db/models/model_message');
 
 describe('Sequelize Connection Test', () => {
     let authed = false;

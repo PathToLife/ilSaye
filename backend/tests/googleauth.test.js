@@ -1,5 +1,5 @@
 const {describe, it} = require('mocha');
-const {validateToken} = require('./googleauth');
+const {validateToken} = require('../src/api/oauth/googleauth');
 /**
  * this test class should only be run if we have a valid token
  */

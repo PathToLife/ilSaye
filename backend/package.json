@@ -32,7 +32,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon start",
-    "test": "mocha src/**/*.test.js",
+    "test": "mocha tests/**/*.test.js",
     "dev1": "node src/client/user.js"
   },
   "devDependencies": {
