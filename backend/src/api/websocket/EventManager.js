@@ -32,9 +32,7 @@ class Event {
     }
 
     addUser(eventUser) {
-        if (!this.eventUsers.has(eventUser.username)) {
-            this.eventUsers.set(eventUser.username, eventUser);
-        }
+        this.eventUsers.set(eventUser.username, eventUser);
         return true;
     }
 
