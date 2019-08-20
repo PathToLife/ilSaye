@@ -18,6 +18,7 @@
     "jsonwebtoken": "^8.5.1",
     "mocha": "^6.2.0",
     "mongoose": "^5.6.7",
+    "nyc": "^14.1.1",
     "passport": "^0.4.0",
     "sequelize": "^5.15.0",
     "shortid": "^2.2.14",
@@ -33,6 +34,7 @@
     "start": "node src/index.js",
     "dev": "nodemon start",
     "test": "mocha tests/**/*.test.js",
+    "coverage": "nyc node test",
     "dev1": "node src/client/user.js"
   },
   "devDependencies": {

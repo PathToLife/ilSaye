@@ -62,6 +62,27 @@ describe('Testing socket connection', () => {
         })
     });
 
+    it('should join and leave public socket', done => {
+        const promises = [];
+        tokens.forEach((token) => {
+            promises.push(new Promise((resolve) => {
+                    const pubIO = socketIOClient('ws://localhost:8080/publicapi', {
+                        path: '/socket',
+                        transports: ['websocket']
+                    });
+                    pubIO.on("connect", () => {
+                        resolve(pubIO)
+                    })
+                })
+            );
+        });
+        Promise.all(promises).then(pubIOs => {
+            pubIOs.forEach(io => io.close());
+            if (pubIOs.length !== tokens.length) done('not all clients connected');
+            done()
+        })
+    });
+
     it('should make a room', (done) => {
         host.io.emit('createEvent', {
                 jwt: host.token,
@@ -72,6 +93,21 @@ describe('Testing socket connection', () => {
                     done()
                 } else {
                     done(res);
+                }
+            }
+        );
+    });
+
+    it('should stop duplicate room name', done => {
+        host.io.emit('createEvent', {
+                jwt: host.token,
+                eventName: eventName
+            },
+            (res) => {
+                if (res === true) {
+                    done('should have stopped extra room creation')
+                } else {
+                    done();
                 }
             }
         );
@@ -100,6 +136,27 @@ describe('Testing socket connection', () => {
         }).catch(() => {
             done(`Failed`);
         });
+    });
+
+    it('should stop no exist room join', done => {
+        host.io.emit('joinEvent', {
+                jwt: host.token,
+                eventName: 'notANEvent1232100000000'
+            },
+            (res) => {
+                if(res === true) return  done('should have stopped room join');
+                done();
+            })
+    });
+
+    it('should stop non exist room msg send', done => {
+        host.io.emit('sendMessage', {
+            jwt: host.token,
+            eventName: 'notANEvent1232100000000'
+        }, res => {
+            if (res === true) return done('got send ok instead');
+            done();
+        })
     });
 
     it('should send one message to all clients', done => {
@@ -135,4 +192,5 @@ describe('Testing socket connection', () => {
             })
         }
     )
-});
+})
+;

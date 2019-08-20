@@ -76,20 +76,22 @@ const AttachSockets = (httpServer) => {
             const data = ValidateJWT(jwt);
             if (data) {
                 //res(eventManger.sendMessage(eventName, data.username, message));
-                if (privateSocketRoute.in(eventName)) {
+                if (eventName in privateSocketRoute.rooms) {
                     io.of('/privateapi').to(eventName).emit('receiveMessage', {username:data.username, message});
                     res(true);
-                    return
+                } else if (events.includes(eventName)) {
+                    res('you have not joined this event');
                 } else {
-                    res('event does not exist');
-                    res(false);
+                    res('event does not exist')
                 }
+                return;
             }
             res(false);
         });
 
         privateSocketRoute.on("disconnect", () => {
-            console.log(`Private Client disconnected`);
+            // Socket.io automatically leaves room on disconnect
+            // console.log(`Private Client disconnected`);
         });
     })
 };
