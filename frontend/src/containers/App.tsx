@@ -47,7 +47,7 @@ const App: React.FC = () => {
         setNotifications((previousState: NoticeType[]) => {
             const notificationsCopy = [...previousState];
             notificationsCopy.splice(index, 1);
-            SetLocalData('notifications', JSON.stringify(notifications));
+            SetLocalData('notifications', JSON.stringify(notificationsCopy));
             return notificationsCopy;
         })
     };
