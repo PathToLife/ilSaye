@@ -4,6 +4,15 @@
 }
 
 .Card {
-    background-color: lightblue;
+
+}
+
+.lightblue {
     color: black;
+    background-color: lightblue;
+}
+
+.white {
+    color: black;
+    background-color: white;
 }

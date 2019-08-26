@@ -1,12 +1,12 @@
 import React, {useContext, useEffect} from "react";
 import {Col, Container, Row} from 'react-bootstrap';
-import ChatPanel from "../Chat/ChatPanel";
+import ChatPanel from "./ChatPanel";
 import {Redirect} from "react-router";
 import AppContext, {NoticeLevel} from "../../context/AppContext";
 import {useCookies} from "react-cookie";
-import JoinEvent from "../JoinEvent/JoinEvent";
-import CreateEvent from "../JoinEvent/CreateEvent";
-import SendMessage from "../Chat/SendMessage";
+import JoinEvent from "./EventControls/JoinEvent";
+import CreateEvent from "./EventControls/CreateEvent";
+import SendMessage from "./EventControls/SendMessage";
 import socketsStore from "../../sockets/socketStore";
 
 const MainPanel: React.FC = () => {
@@ -32,7 +32,6 @@ const MainPanel: React.FC = () => {
     const jwt = cookies['jwt'];
 
     const joinEvent = (eventName: string) => {
-        const ps = socketsStore.private;
         if (socketsStore.private === null) return appContext.addNotifications(`Failed to Join, Socket Null`, NoticeLevel.Bad);
         socketsStore.private.emit("joinEvent", {jwt, eventName}, (response: boolean | string) => {
             if (response === true) {

@@ -4,6 +4,7 @@ import classes from "./ChatPanel.module.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import cx from "classnames";
 
 const test_messages = [
     {user: 'Bob', text: 'Please create an event', img: null},
@@ -23,7 +24,7 @@ const ChatPanel: React.FC<TChatPanel> = ({privateSocket}) => {
 
     const makeMessage = (user: string, text: string, img: string | null, left:boolean) => {
         return (
-            <Card className={classes.Card + " mt-1 " + (left ? "" : "float-right")}>
+            <Card className={cx(classes.Card, classes.white)}>
                 <Card.Title>{user}</Card.Title>
                 <Card.Body>{text}</Card.Body>
             </Card>

@@ -5,7 +5,7 @@ import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import classes from './App.module.css';
 // Components
 import ScreenSaver from "../components/ScreenSaver/ScreenSaver";
-import MainPanel from "../components/MainPanel/MainPanel";
+import MainPanel from "../components/Chat/MainPanel";
 import MainNav from "../components/Navigation/MainNav";
 import SignInSignUp from "../components/LoginSignUp/SignInSignUp";
 import Notices from "../components/Notifications/Notices";
