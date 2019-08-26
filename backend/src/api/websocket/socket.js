@@ -2,6 +2,7 @@ const socketIO = require('socket.io');
 const {notifyOnline} = require('./online');
 const socketCounter = require('./socketCounterManager');
 const {ValidateJWT} = require('../../client/authenticate');
+const {MIN_EVENT_NAME_LENGTH} = require('./EventManager');
 
 const AttachSockets = (httpServer) => {
     const io = socketIO(httpServer, {
@@ -46,14 +47,13 @@ const AttachSockets = (httpServer) => {
 
         privateSocketRoute.on("createEvent", ({jwt, eventName}, res) => {
             if (jwt && ValidateJWT(jwt)) {
-                if (!events.includes(eventName)) {
-                    events.push(eventName);
-                    privateSocketRoute.join(eventName);
-                    res(true);
-                    return
-                } else {
-                    res('event already created');
-                }
+                if (events.includes(eventName)) return res('event already created');
+                if (!(eventName.length >= MIN_EVENT_NAME_LENGTH)) return res('event name too short');
+
+                events.push(eventName);
+                privateSocketRoute.join(eventName);
+                res(true);
+                return
             }
             res(false);
         });
@@ -61,7 +61,7 @@ const AttachSockets = (httpServer) => {
         privateSocketRoute.on("joinEvent", ({jwt, eventName}, res) => {
             if (jwt && ValidateJWT(jwt)) {
                 // const joinResult = eventManger.joinEvent(eventName, data.username, privateSocketRoute.id);
-                if (events.includes(eventName)) {
+                if (eventName.length >= MIN_EVENT_NAME_LENGTH && events.includes(eventName)) {
                     privateSocketRoute.join(eventName);
                     res(true);
                     return
