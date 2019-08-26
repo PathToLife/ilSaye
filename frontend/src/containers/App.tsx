@@ -57,6 +57,9 @@ const App: React.FC = () => {
             path: '/socket',
             transports: ['websocket']
         });
+        socketsStore.public.on("connect_error", () => {
+            addNotificationsHandler("this is a bad. I can't talk to our public server", NoticeLevel.Bad);
+        });
         socketsStore.public.on("message", (data: string) => messageHandler(data));
         socketsStore.public.on("usersOnline", (data: number) => {
             setUsersOnline(data);
