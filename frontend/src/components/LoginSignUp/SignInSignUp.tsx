@@ -6,6 +6,7 @@ import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import {Redirect} from "react-router-dom";
+import cx from "classnames";
 
 import classes from "./LoginSignUp.module.css";
 import AppContext from "../../context/AppContext";
@@ -22,7 +23,7 @@ const SignInSignUp: React.FC<joinEventPanelTypes> = () => {
     const colConfig = {xs: 12, md: 7, lg: 5};
 
     return (
-        <div className={classes.JoinEvent}>
+        <div className={cx(classes.JoinEvent)}>
             <Accordion className="m-auto w-100" defaultActiveKey="login">
                 <Container className="pt-5 pl-md-5 pr-md-5 pb-md-2">
                     <Row>

@@ -34,9 +34,22 @@ const App: React.FC = () => {
     const [notifications, setNotifications] = useState([] as NoticeType[]);
     const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
 
-    const setNotificationsHandler = (notifications: NoticeType[]) => {
-        SetLocalData('notifications', JSON.stringify(notifications));
-        setNotifications(notifications)
+    const addNotificationsHandler = (message: string, level: NoticeLevel) => {
+        setNotifications((previousState: NoticeType[]) => {
+            const noticesCopy = [...previousState];
+            noticesCopy.push({message, level});
+            return noticesCopy;
+        });
+    };
+
+    // Note setNotifications is async. Multiple calls can overwrite data from other calls, therefore it's better to attach a function.
+    const removeNotificationsHandler = (index: number) => {
+        setNotifications((previousState: NoticeType[]) => {
+            const notificationsCopy = [...previousState];
+            notificationsCopy.splice(index, 1);
+            SetLocalData('notifications', JSON.stringify(notificationsCopy));
+            return notificationsCopy;
+        })
     };
 
     const enablePublicSocket = () => {
@@ -56,9 +69,9 @@ const App: React.FC = () => {
             path: '/socket',
             transports: ['websocket']
         });
-        socketsStore.private.on("message", (data: string) => {
-
-        });
+        socketsStore.private.on("connect", () => {
+            console.log("Private Channel Connected");
+        })
     };
     const disablePrivateSocket = () => {socketsStore.private = null};
 
@@ -94,18 +107,12 @@ const App: React.FC = () => {
 
     };
 
-    const addNotificationsHandler = (message: string, level: NoticeLevel) => {
-        const noticesCopy = [...notifications];
-        noticesCopy.push({message, level});
-        setNotificationsHandler(noticesCopy);
-    };
-
     const setLoggedInDetails = (username: string, jwt?:string, eventName:string = 'MSA') => {
         setAuthenticated(true);
         setEventName(eventName);
         setUsername(username);
         if (jwt) setCookie('jwt', jwt, {maxAge: 3600});
-        setNotificationsHandler([]);
+        setNotifications([]);
         enablePrivateSocket();
     };
 
@@ -161,10 +168,10 @@ const App: React.FC = () => {
             >
                 <div className={classes.App}>
                     <MainNav/>
-                    <Notices setNotificationsHandler={setNotificationsHandler}/>
+                    <Notices removeNotificationsHandler={removeNotificationsHandler}/>
                     <Switch>
                         <Route exact path="/" component={() => <ScreenSaver usersOnline={usersOnline}/>}/>
-                        <Route path="/dashboard" component={() => <MainPanel privateSocket={socketsStore.private}/>}/>
+                        <Route path="/dashboard" component={() => <MainPanel/>}/>
                         <Route path="/join" component={() => <SignInSignUp/>}/>
                         <Route component={() => <div>Not Found</div>}/>
                     </Switch>

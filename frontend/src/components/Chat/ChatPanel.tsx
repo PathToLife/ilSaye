@@ -6,11 +6,11 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 const test_messages = [
-    {user: 'bob', text: 'djwioajo jiowa jijowa', img: null},
-    {user: 'bob', text: 'djwioajo jiowa jijowa', img: null},
-    {user: 'bob3', text: 'djwioajo jiowa jijowa', img: null},
-    {user: 'bob4', text: 'djwioajo jiowa jijowa', img: null},
-    {user: 'bob5', text: 'djwioajo jiowa jijowa', img: null},
+    {user: 'Bob', text: 'Please create an event', img: null},
+    {user: 'Sarah', text: 'Then Join It', img: null},
+    {user: 'Dylan', text: 'And send a message', img: null},
+    {user: 'Jackie', text: 'like Boh yah', img: null},
+    {user: 'Sean', text: 'Reproduce Bug, fix, create test to stop regression pls', img: null},
 ];
 
 type TChatPanel = {

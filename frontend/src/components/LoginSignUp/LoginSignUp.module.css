@@ -6,6 +6,10 @@
     font-size: calc(40px + 2vmin);
 }
 
+.JoinEvent {
+    margin-bottom: 20vh;
+}
+
 .JoinEvent button {
     width: 100%;
 }

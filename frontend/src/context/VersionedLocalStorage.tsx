@@ -1,5 +1,5 @@
 // Local Storage Version
-const LOCAL_STORE_VERSION = "0.8.1";
+const LOCAL_STORE_VERSION = "0.8.4";
 
 export const GetLocalData = (key:string, versionLock:boolean=true): string | null => {
     if (versionLock) {

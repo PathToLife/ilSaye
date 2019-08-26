@@ -8,7 +8,7 @@ const JWT_SECRET = process.env.AUTH_JWT_SECRET ? process.env.AUTH_JWT_SECRET : '
 // @todo Store token blacklist for 3600 then delete on next update
 const TokenBlackList = [];
 
-const SignJWT = (username, email, duration=3600) => {
+const SignUser = (username, email, duration=3600) => {
     return jwt.sign({
         username: username,
         email: email
@@ -36,7 +36,7 @@ const ValidatePassword = (pass, hash) => {
 };
 
 const sendAndSignAuthUser = (res, username, email, eventName) => {
-    const jwt = SignJWT(username, email);
+    const jwt = SignUser(username, email);
     const userData = JSON.stringify({username, email, eventName, jwt}, null, 2);
     res.status(200);
     res.send(userData);
@@ -47,5 +47,5 @@ module.exports = {
     HashPassword,
     ValidatePassword,
     ValidateJWT,
-    SignUser: SignJWT
+    SignUser
 };

@@ -1,4 +1,4 @@
-const {describe, it} = require('mocha');
+const {describe, it, after} = require('mocha');
 const expect = require('expect');
 
 /**
@@ -6,11 +6,11 @@ const expect = require('expect');
  * it also servers a dual purpose of creating / altering tables for a new db
  */
 
-const db = require('./db.js');
-const modelTest = require('./models/model_test');
-const modelUser = require('./models/model_user');
-const modelEvent = require('./models/model_event');
-const modelMessage = require('./models/model_message');
+const db = require('../src/db/db.js');
+const modelTest = require('../src/db/models/model_test');
+const modelUser = require('../src/db/models/model_user');
+const modelEvent = require('../src/db/models/model_event');
+const modelMessage = require('../src/db/models/model_message');
 
 describe('Sequelize Connection Test', () => {
     let authed = false;
@@ -34,24 +34,24 @@ describe('Sequelize Connection Test', () => {
         }).catch(err => done(err));
     });
 
-    it('should alter test_table', function (done) {
+    it.skip('should alter test_table', function (done) {
         need_auth(this);
         modelTest.create({text: "Sequelize"}).then(() => {
             done()
         }).catch(err => done(err));
     }).timeout(15000);
 
-    it('should alter table for user', function (done) {
+    it.skip('should alter table for user', function (done) {
         modelUser.sync({alter: true}).then(() => done())
             .catch(err => done(err));
     }).timeout(15000);
 
-    it('should alter table for event', function (done) {
+    it.skip('should alter table for event', function (done) {
         modelEvent.sync({alter: true}).then(() => done())
             .catch(err => done(err));
     }).timeout(15000);
 
-    it('should alter table for messages', function (done) {
+    it.skip('should alter table for messages', function (done) {
         modelMessage.sync({alter: true}).then(() => done())
             .catch(err => done(err));
     }).timeout(15000);
@@ -90,4 +90,9 @@ describe('Sequelize Connection Test', () => {
         });
 
     });
+
+    // db keeps this test open
+    after(() => {
+        db.close().then(() => {});
+    })
 });
