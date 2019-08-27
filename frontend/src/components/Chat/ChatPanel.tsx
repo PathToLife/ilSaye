@@ -24,10 +24,13 @@ const ChatPanel: React.FC<TChatPanel> = ({privateSocket}) => {
 
     const makeMessage = (user: string, text: string, img: string | null, left:boolean) => {
         return (
-            <Card className={cx(classes.Card, classes.white)}>
-                <Card.Title>{user}</Card.Title>
-                <Card.Body>{text}</Card.Body>
-            </Card>
+            <div>
+                <span className="username">{user}</span> <span>{text}</span>
+                {/*<Card className={cx(classes.Card, classes.white)}>*/}
+                {/*    <Card.Title>{user}</Card.Title>*/}
+                {/*    <Card.Body>{text}</Card.Body>*/}
+                {/*</Card>*/}
+            </div>
         )
     };
 
@@ -51,7 +54,7 @@ const ChatPanel: React.FC<TChatPanel> = ({privateSocket}) => {
     };
 
     return (
-        <Container className={classes.ChatPanel + " mt-5"}>
+        <Container className={cx(classes.ChatPanel, "p-2")}>
             {buildMessages()}
         </Container>
     )

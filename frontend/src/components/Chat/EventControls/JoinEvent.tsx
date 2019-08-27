@@ -27,7 +27,7 @@ const JoinEvent:React.FC<TJoinEvent> = ({joinEvent}) => {
               }) => (
                 <InputGroup className="mb-3">
                     <FormControl
-                        placeholder="EventName"
+                        placeholder="Event name"
                         aria-label="EventName"
                         aria-describedby="eventNameInput"
                         name="eventName"

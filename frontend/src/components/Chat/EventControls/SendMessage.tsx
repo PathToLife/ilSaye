@@ -27,7 +27,7 @@ const SendMessage:React.FC<TSendMessage> = ({sendMessage}) => {
               }) => (
                 <InputGroup className="mb-3">
                     <FormControl
-                        placeholder="message"
+                        placeholder="say something"
                         name="message"
                         onChange={handleChange}
                         value={values.message}

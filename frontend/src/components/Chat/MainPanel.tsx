@@ -8,6 +8,7 @@ import JoinEvent from "./EventControls/JoinEvent";
 import CreateEvent from "./EventControls/CreateEvent";
 import SendMessage from "./EventControls/SendMessage";
 import socketsStore from "../../sockets/socketStore";
+import cx from 'classnames';
 
 const MainPanel: React.FC = () => {
     const appContext = useContext(AppContext);
@@ -71,13 +72,14 @@ const MainPanel: React.FC = () => {
 
     return (
         <Container>
-            <Row>
+            <Row className={cx('mt-md-5', 'mt-3')}>
                 <Col md={4}>
                     <CreateEvent createEvent={createEvent}/>
                     <JoinEvent joinEvent={joinEvent}/>
                     <SendMessage sendMessage={sendMessage}/>
                 </Col>
                 <Col>
+                    <ChatPanel privateSocket={socketsStore.private}/>
                     <ChatPanel privateSocket={socketsStore.private}/>
                 </Col>
             </Row>
