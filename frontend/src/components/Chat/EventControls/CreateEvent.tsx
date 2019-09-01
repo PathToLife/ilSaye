@@ -27,7 +27,7 @@ const CreateEvent:React.FC<TCreateEvent> = ({createEvent}) => {
               }) => (
                 <InputGroup className="mb-3">
                     <FormControl
-                        placeholder="EventName"
+                        placeholder="Event name"
                         name="eventName"
                         onChange={handleChange}
                         value={values.eventName}

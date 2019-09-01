@@ -1,13 +1,14 @@
 import React, {useContext, useEffect} from "react";
 import {Col, Container, Row} from 'react-bootstrap';
-import ChatPanel from "../Chat/ChatPanel";
+import ChatPanel from "./ChatPanel";
 import {Redirect} from "react-router";
 import AppContext, {NoticeLevel} from "../../context/AppContext";
 import {useCookies} from "react-cookie";
-import JoinEvent from "../JoinEvent/JoinEvent";
-import CreateEvent from "../JoinEvent/CreateEvent";
-import SendMessage from "../Chat/SendMessage";
+import JoinEvent from "./EventControls/JoinEvent";
+import CreateEvent from "./EventControls/CreateEvent";
+import SendMessage from "./EventControls/SendMessage";
 import socketsStore from "../../sockets/socketStore";
+import cx from 'classnames';
 
 const MainPanel: React.FC = () => {
     const appContext = useContext(AppContext);
@@ -15,7 +16,7 @@ const MainPanel: React.FC = () => {
 
     useEffect(() => {
         if (socketsStore.private !== null) {
-            socketsStore.private.on('receiveMessage', (data: {username: string, message:string}) => {
+            socketsStore.private.on('receiveMessage', (data: { username: string, message: string }) => {
                 const {username, message} = data;
                 appContext.addNotifications(`${username} ${message}`, NoticeLevel.Neutral);
             })
@@ -32,14 +33,13 @@ const MainPanel: React.FC = () => {
     const jwt = cookies['jwt'];
 
     const joinEvent = (eventName: string) => {
-        const ps = socketsStore.private;
         if (socketsStore.private === null) return appContext.addNotifications(`Failed to Join, Socket Null`, NoticeLevel.Bad);
         socketsStore.private.emit("joinEvent", {jwt, eventName}, (response: boolean | string) => {
             if (response === true) {
                 appContext.addNotifications(`Joined ${eventName}`, NoticeLevel.Good);
                 appContext.setEventName(eventName);
             } else {
-                appContext.addNotifications(`Failed to Join ${eventName} ${response === false ? '' : response}`, NoticeLevel.Warning)
+                appContext.addNotifications(`Failed to Join "${eventName}" ${response === false ? '' : response}`, NoticeLevel.Warning)
             }
         });
     };
@@ -50,7 +50,7 @@ const MainPanel: React.FC = () => {
             if (response === true) {
                 appContext.addNotifications(`Created ${eventName}`, NoticeLevel.Good)
             } else {
-                appContext.addNotifications(`Failed to Create ${eventName} ${response === false ? '' : response}`, NoticeLevel.Warning)
+                appContext.addNotifications(`Failed to Create "${eventName}" ${response === false ? '' : response}`, NoticeLevel.Warning)
             }
         });
     };
@@ -72,20 +72,28 @@ const MainPanel: React.FC = () => {
 
     return (
         <Container>
-            <Row>
-                <ChatPanel privateSocket={socketsStore.private}/>
-            </Row>
-            <Row className="m-3">
-                <Col md={4}>
-                    <JoinEvent joinEvent={joinEvent}/>
-                </Col>
-                <Col md={4}>
-                    <SendMessage sendMessage={sendMessage}/>
-                </Col>
+            <Row className={cx('mt-md-5', 'mt-3')}>
                 <Col md={4}>
                     <CreateEvent createEvent={createEvent}/>
+                    <JoinEvent joinEvent={joinEvent}/>
+                    <SendMessage sendMessage={sendMessage}/>
+                </Col>
+                <Col>
+                    <ChatPanel privateSocket={socketsStore.private}/>
+                    <ChatPanel privateSocket={socketsStore.private}/>
                 </Col>
             </Row>
+            {/*<Row className="m-3">*/}
+            {/*    <Col md={4}>*/}
+            {/*        <JoinEvent joinEvent={joinEvent}/>*/}
+            {/*    </Col>*/}
+            {/*    <Col md={4}>*/}
+            {/*        <SendMessage sendMessage={sendMessage}/>*/}
+            {/*    </Col>*/}
+            {/*    <Col md={4}>*/}
+            {/*        <CreateEvent createEvent={createEvent}/>*/}
+            {/*    </Col>*/}
+            {/*</Row>*/}
         </Container>
     );
 };

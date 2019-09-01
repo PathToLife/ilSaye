@@ -1,7 +1,7 @@
 import React from "react";
 import {Navbar, Nav, NavDropdown} from "react-bootstrap";
 import AppContext from "../../context/AppContext";
-import {NavLink, Link} from 'react-router-dom';
+import {NavLink, Link, Route} from 'react-router-dom';
 
 const MainNav: React.FC = () => {
     const appContext = React.useContext(AppContext);
@@ -32,9 +32,7 @@ const MainNav: React.FC = () => {
         r_nav = [
             <Nav key="1" className="mr-auto"/>,
             <Nav key="2">
-                <Link to="/join" className="nav-link">
-                    Login
-                </Link>
+                <Route exact path="/" component={() => <Link to="/join" className="nav-link">Login</Link>}/>
             </Nav>
         ]
     }

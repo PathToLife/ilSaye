@@ -1,9 +1,18 @@
 
 .ChatPanel {
-
+    background-color: rgba(244, 199, 95, 0.84);
 }
 
 .Card {
-    background-color: lightblue;
+
+}
+
+.lightblue {
     color: black;
+    background-color: lightblue;
+}
+
+.white {
+    color: black;
+    background-color: white;
 }

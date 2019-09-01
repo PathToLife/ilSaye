@@ -4,16 +4,16 @@ import Button from "react-bootstrap/Button";
 import {Formik} from "formik";
 import React from "react";
 
-type TSendMessage = {
-    sendMessage: any
+type TJoinEvent = {
+    joinEvent: any
 }
 
-const SendMessage:React.FC<TSendMessage> = ({sendMessage}) => {
+const JoinEvent:React.FC<TJoinEvent> = ({joinEvent}) => {
     return (
         <Formik
-            onSubmit={(values) => sendMessage(values.message)}
+            onSubmit={(values) => joinEvent(values.eventName)}
             initialValues={{
-                message: ""
+                eventName: ""
             }}
         >
             {({
@@ -27,16 +27,18 @@ const SendMessage:React.FC<TSendMessage> = ({sendMessage}) => {
               }) => (
                 <InputGroup className="mb-3">
                     <FormControl
-                        placeholder="message"
-                        name="message"
+                        placeholder="Event name"
+                        aria-label="EventName"
+                        aria-describedby="eventNameInput"
+                        name="eventName"
                         onChange={handleChange}
-                        value={values.message}
+                        value={values.eventName}
                     />
-                    <Button type="submit" onClick={() => handleSubmit()}>Send</Button>
+                    <Button type="submit" onClick={() => handleSubmit()}>Join</Button>
                 </InputGroup>
             )}
         </Formik>
     )
 };
 
-export default SendMessage;
+export default JoinEvent;

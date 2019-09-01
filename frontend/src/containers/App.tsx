@@ -5,7 +5,7 @@ import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import classes from './App.module.css';
 // Components
 import ScreenSaver from "../components/ScreenSaver/ScreenSaver";
-import MainPanel from "../components/MainPanel/MainPanel";
+import MainPanel from "../components/Chat/MainPanel";
 import MainNav from "../components/Navigation/MainNav";
 import SignInSignUp from "../components/LoginSignUp/SignInSignUp";
 import Notices from "../components/Notifications/Notices";
@@ -56,6 +56,9 @@ const App: React.FC = () => {
         socketsStore.public = socketIOClient(`${endpoint}/publicapi`, {
             path: '/socket',
             transports: ['websocket']
+        });
+        socketsStore.public.on("connect_error", () => {
+            addNotificationsHandler("this is a bad. I can't talk to our public server", NoticeLevel.Bad);
         });
         socketsStore.public.on("message", (data: string) => messageHandler(data));
         socketsStore.public.on("usersOnline", (data: number) => {
