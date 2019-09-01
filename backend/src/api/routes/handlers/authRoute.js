@@ -1,15 +1,17 @@
 const express = require('express');
+const yup = require('yup');
 const {sendNotImplemented, sendError} = require('../helpers/error');
 const {validateToken} = require('../../oauth/googleauth');
 const {sendAndSignAuthUser, HashPassword, ValidatePassword, ValidateJWT} = require('../../../client/authenticate');
-const {getUserByUsername,getUserByEmail} = require('../../../client/user');
+const {getUserByUsername, getUserByEmail} = require('../../../client/user');
 const randName = require('../../../client/generateName');
 const UserDB = require('../../../db/models/model_user');
+const {Op} = require('sequelize');
 
 const router = express.Router();
 
 router.get('/auth', (req, res) => {
-    if(req.query.token) {
+    if (req.query.token) {
         const decoded = ValidateJWT(req.query.token);
         if (decoded.email) {
             res.status(200);
@@ -20,14 +22,29 @@ router.get('/auth', (req, res) => {
     sendError(res, 401, 'not authed');
 });
 router.get('/logout', (req, res) => {
-    res.send({msg:'loggedOut'});
+    res.send({msg: 'loggedOut'});
 });
 router.post('/login', (req, res) => {
     try {
         const reqData = req.body;
-        if (reqData && reqData.email && reqData.password) {
-            UserDB.findOne({where: {email: reqData.email}}).then(userObj => {
+        if (reqData && reqData.userEmail && reqData.password) {
 
+            let query = null;
+            // if (yup.string().email().isValidSync(reqData.userEmail)) {
+            //     query = {where: {email: reqData.userEmail}};
+            // } else {
+            //     query = {where: {username: reqData.userEmail}};
+            // }
+            query = {
+                where: {
+                    [Op.or]: [{
+                        username: reqData.userEmail
+                    }, {
+                        email: reqData.userEmail
+                    }]
+                }
+            };
+            UserDB.findOne(query).then(userObj => {
                 if (userObj === null) {
                     sendError(res, 401, 'Email or password wrong');
                     return

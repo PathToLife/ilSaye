@@ -6,7 +6,13 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import cx from "classnames";
 
-const test_messages = [
+type TMessage = {
+    user: string,
+    text: string,
+    img: string | null
+}
+
+const test_messages: TMessage[] = [
     {user: 'Bob', text: 'Please create an event', img: null},
     {user: 'Sarah', text: 'Then Join It', img: null},
     {user: 'Dylan', text: 'And send a message', img: null},

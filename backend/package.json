@@ -28,7 +28,8 @@
     "sqlite3": "^4.0.9",
     "swagger-ui-express": "^4.0.7",
     "tedious": "^6.3.0",
-    "yamljs": "^0.3.0"
+    "yamljs": "^0.3.0",
+    "yup": "^0.27.0"
   },
   "scripts": {
     "start": "node src/index.js",

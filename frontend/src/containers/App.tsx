@@ -119,9 +119,9 @@ const App: React.FC = () => {
         enablePrivateSocket();
     };
 
-    const loginHandler = (email: string, password: string): boolean => {
+    const loginHandler = (userEmail: string, password: string): boolean => {
         axios.post(`${endpoint}/api/v1/login`, {
-            email, password
+            userEmail, password
         }).then(response => {
             console.log(response);
             if (response.status === 200) {

@@ -9,7 +9,7 @@ type LoginFormType = {
 }
 
 const schema = yup.object().shape({
-    email: yup.string().email().required(),
+    userEmail: yup.string().required(),
     password: yup.string().required()
 });
 
@@ -17,10 +17,10 @@ const LoginForm: React.FC<LoginFormType> = ({loginHandler}) => {
     return (
         <Formik
             onSubmit={(values) => {
-                loginHandler(values.email, values.password)
+                loginHandler(values.userEmail, values.password);
             }}
             initialValues={{
-                email: "",
+                userEmail: "",
                 password: ""
             }}
             validationSchema={schema}
@@ -36,17 +36,17 @@ const LoginForm: React.FC<LoginFormType> = ({loginHandler}) => {
               }) => (
                 <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group controlId="loginFormEmail">
-                        <Form.Label column={false}>Email address</Form.Label>
+                        <Form.Label column={false}>Username or Email</Form.Label>
                         <Form.Control
-                            type="email"
-                            name="email"
-                            value={values.email}
+                            type="text"
+                            name="userEmail"
+                            value={values.userEmail}
                             onChange={handleChange}
-                            placeholder="Enter Email"
-                            isInvalid={touched.email && !!errors.email}
+                            placeholder="Enter Username or Email"
+                            isInvalid={touched.userEmail && !!errors.userEmail}
                         />
                         <Form.Control.Feedback type="invalid">
-                            {errors.email}
+                            {errors.userEmail}
                         </Form.Control.Feedback>
                         <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                         <Form.Text className="text-muted">
