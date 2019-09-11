@@ -33,6 +33,7 @@ const App: React.FC = () => {
     const [eventName, setEventName] = useState(defaultContext.eventName);
     const [notifications, setNotifications] = useState([] as NoticeType[]);
     const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
+    const [privateSocket, setPrivateSocket] = useState<SocketIOClient.Socket | null>(null);
 
     const addNotificationsHandler = (message: string, level: NoticeLevel) => {
         setNotifications((previousState: NoticeType[]) => {
@@ -60,7 +61,6 @@ const App: React.FC = () => {
         socketsStore.public.on("connect_error", () => {
             addNotificationsHandler("this is a bad. I can't talk to our public server", NoticeLevel.Bad);
         });
-        socketsStore.public.on("message", (data: string) => messageHandler(data));
         socketsStore.public.on("usersOnline", (data: number) => {
             setUsersOnline(data);
         });
@@ -74,6 +74,7 @@ const App: React.FC = () => {
         });
         socketsStore.private.on("connect", () => {
             console.log("Private Channel Connected");
+            setPrivateSocket(socketsStore.private);
         })
     };
     const disablePrivateSocket = () => {socketsStore.private = null};
@@ -105,10 +106,6 @@ const App: React.FC = () => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [endpoint]);
-
-    const messageHandler = (data: string) => {
-
-    };
 
     const setLoggedInDetails = (username: string, jwt?:string, eventName:string = 'MSA') => {
         setAuthenticated(true);
@@ -173,10 +170,10 @@ const App: React.FC = () => {
                     <MainNav/>
                     <Notices removeNotificationsHandler={removeNotificationsHandler}/>
                     <Switch>
-                        <Route exact path="/" component={() => <ScreenSaver usersOnline={usersOnline}/>}/>
-                        <Route path="/dashboard" component={() => <MainPanel/>}/>
-                        <Route path="/join" component={() => <SignInSignUp/>}/>
-                        <Route component={() => <div>Not Found</div>}/>
+                        <Route exact path="/" render={() => <ScreenSaver usersOnline={usersOnline}/>}/>
+                        <Route path="/dashboard" render={() => <MainPanel privateSocket={privateSocket}/>}/>
+                        <Route path="/join" render={() => <SignInSignUp/>}/>
+                        <Route render={() => <div>Not Found</div>}/>
                     </Switch>
                 </div>
             </AppContext.Provider>

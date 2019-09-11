@@ -73,11 +73,12 @@ const AttachSockets = (httpServer) => {
         });
 
         privateSocketRoute.on("sendMessage", ({jwt, eventName, message}, res) => {
-            const data = ValidateJWT(jwt);
-            if (data) {
+            const user = ValidateJWT(jwt);
+            if (user) {
+                console.log(eventName, message);
                 //res(eventManger.sendMessage(eventName, data.username, message));
                 if (eventName in privateSocketRoute.rooms) {
-                    io.of('/privateapi').to(eventName).emit('receiveMessage', {username:data.username, message});
+                    io.of('/privateapi').to(eventName).emit('receiveMessage', {username:user.username, message});
                     res(true);
                 } else if (events.includes(eventName)) {
                     res('you have not joined this event');
