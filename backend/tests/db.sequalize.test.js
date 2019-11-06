@@ -12,7 +12,7 @@ const modelUser = require('../src/db/models/model_user');
 const modelEvent = require('../src/db/models/model_event');
 const modelMessage = require('../src/db/models/model_message');
 
-describe('Sequelize Connection Test', () => {
+describe.skip('Sequelize Connection Test', () => {
     let authed = false;
     const need_auth = (test) => {
         if (!authed) test.skip();
