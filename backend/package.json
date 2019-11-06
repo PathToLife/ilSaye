@@ -17,7 +17,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mocha": "^6.2.0",
-    "mongoose": "^5.6.7",
+    "mongoose": "^5.7.5",
     "nyc": "^14.1.1",
     "passport": "^0.4.0",
     "sequelize": "^5.15.0",
